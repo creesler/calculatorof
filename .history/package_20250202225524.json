@@ -1,0 +1,40 @@
+{
+  "name": "roi-calculator",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "predev": "node scripts/cleanup-ports.js",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "generate-formula": "npx tsx scripts/generate-formula-image.tsx",
+    "generate-loan-formula": "npx tsx scripts/generate-formula-images.tsx",
+    "generate-loan-screenshot": "npx tsx scripts/generate-loan-screenshots.tsx",
+    "generate-bmi-screenshot": "npx tsx scripts/generate-bmi-screenshots.tsx",
+    "generate-calorie-formula": "npx tsx scripts/generate-formula-images.tsx",
+    "generate-calorie-screenshot": "npx tsx scripts/generate-calorie-screenshots.tsx",
+    "generate-pet-food-formula": "npx tsx scripts/generate-formula-images.tsx",
+    "generate-pet-food-screenshot": "npx tsx scripts/generate-pet-food-screenshots.tsx",
+    "generate-percentage-formula": "npx tsx scripts/generate-formula-images.tsx",
+    "generate-percentage-screenshot": "npx tsx scripts/generate-percentage-screenshots.tsx",
+    "generate-scientific-screenshot": "npx tsx scripts/generate-scientific-screenshots.tsx"
+  },
+  "dependencies": {
+    "next": "14.1.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.7",
+    "@tailwindcss/typography": "^0.5.10",
+    "@types/node": "^20.11.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32",
+    "puppeteer": "^24.1.1",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.3.0"
+  }
+}
