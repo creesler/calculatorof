@@ -20,14 +20,22 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
-    }
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "scripts/cleanup-ports.js"
+    "scripts/cleanup-ports.js",
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

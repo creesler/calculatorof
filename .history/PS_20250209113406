@@ -1,0 +1,41 @@
+npm install next-seo 
+npm run typecheck
+# or
+npx tsc --noEmit 
+rm src/pages/index.tsx 
+npm install react-icons 
+mkdir -p src/app/finance/roi-calculator 
+cp src/pages/finance/roi-calculator.tsx src/app/finance/roi-calculator/page.tsx 
+mkdir -p src/app/finance/loan-calculator
+cp src/pages/finance/loan-calculator.tsx src/app/finance/loan-calculator/page.tsx 
+mkdir -p src/app/health/bmi-calculator
+
+# Then copy with full paths and verify
+Copy-Item "src/pages/health/bmi-calculator.tsx" -Destination "src/app/health/bmi-calculator/page.tsx"
+
+# Verify file exists
+ls src/app/health/bmi-calculator/page.tsx 
+
+# Create images directory if it doesn't exist
+mkdir -p public/images
+
+# Copy the BMI chart image if it exists in the old location
+Copy-Item "src/pages/health/images/bmi-chart.jpg" -Destination "public/images/bmi-chart.jpg" 
+
+# Create directory
+mkdir -p src/app/health/calorie-calculator
+
+# Copy the file
+Copy-Item "src/pages/health/calorie-calculator.tsx" -Destination "src/app/health/calorie-calculator/page.tsx" 
+
+# Create directory
+mkdir -p src/app/pet/pet-food-calculator
+
+# Copy the file
+Copy-Item "src/pages/pet/pet-food-calculator.tsx" -Destination "src/app/pet/pet-food-calculator/page.tsx" 
+
+# Create directory
+mkdir -p src/app/math/percentage-calculator
+
+# Copy the file
+Copy-Item "src/pages/math/percentage-calculator.tsx" -Destination "src/app/math/percentage-calculator/page.tsx" 

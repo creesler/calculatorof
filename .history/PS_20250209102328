@@ -1,0 +1,6 @@
+npm install next-seo 
+npm run typecheck
+# or
+npx tsc --noEmit 
+rm src/pages/index.tsx 
+npm install react-icons 

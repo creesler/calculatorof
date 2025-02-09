@@ -1,0 +1,4 @@
+npm install next-seo 
+npm run typecheck
+# or
+npx tsc --noEmit 

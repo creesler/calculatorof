@@ -1,0 +1,12 @@
+npm install next-seo 
+npm run typecheck
+# or
+npx tsc --noEmit 
+rm src/pages/index.tsx 
+npm install react-icons 
+mkdir -p src/app/finance/roi-calculator 
+cp src/pages/finance/roi-calculator.tsx src/app/finance/roi-calculator/page.tsx 
+mkdir -p src/app/finance/loan-calculator
+cp src/pages/finance/loan-calculator.tsx src/app/finance/loan-calculator/page.tsx 
+mkdir -p src/app/health/bmi-calculator
+cp src/pages/health/bmi-calculator.tsx src/app/health/bmi-calculator/page.tsx 
