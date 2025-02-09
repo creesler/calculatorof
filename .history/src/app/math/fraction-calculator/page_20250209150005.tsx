@@ -148,9 +148,6 @@ export default function FractionCalculator() {
             <div className="flex items-center justify-center gap-4">
               {/* First Fraction */}
               <div className="flex flex-col items-center">
-                <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mb-2 shadow-sm">
-                  Numerator
-                </label>
                 <input
                   type="number"
                   value={inputs.num1}
@@ -166,9 +163,6 @@ export default function FractionCalculator() {
                   className="w-20 p-2 border rounded text-center"
                   placeholder="1"
                 />
-                <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mt-2 shadow-sm">
-                  Denominator
-                </label>
               </div>
 
               {/* Operation Selector - Vertical */}
@@ -233,9 +227,6 @@ export default function FractionCalculator() {
 
               {/* Second Fraction */}
               <div className="flex flex-col items-center">
-                <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mb-2 shadow-sm">
-                  Numerator
-                </label>
                 <input
                   type="number"
                   value={inputs.num2}
@@ -251,9 +242,6 @@ export default function FractionCalculator() {
                   className="w-20 p-2 border rounded text-center"
                   placeholder="1"
                 />
-                <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mt-2 shadow-sm">
-                  Denominator
-                </label>
               </div>
 
               {/* Equals Sign */}
@@ -377,22 +365,14 @@ export default function FractionCalculator() {
               <div className="flex items-center justify-center gap-4">
                 {/* First Mixed Number */}
                 <div className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    value={mixedInputs.whole1}
+                    onChange={(e) => setMixedInputs({...mixedInputs, whole1: Number(e.target.value)})}
+                    className="w-16 p-2 border rounded text-center"
+                    placeholder="0"
+                  />
                   <div className="flex flex-col items-center">
-                    <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mb-2 shadow-sm">
-                      Whole
-                    </label>
-                    <input
-                      type="number"
-                      value={mixedInputs.whole1}
-                      onChange={(e) => setMixedInputs({...mixedInputs, whole1: Number(e.target.value)})}
-                      className="w-16 p-2 border rounded text-center"
-                      placeholder="0"
-                    />
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mb-2 shadow-sm">
-                      Numerator
-                    </label>
                     <input
                       type="number"
                       value={mixedInputs.num1}
@@ -408,9 +388,6 @@ export default function FractionCalculator() {
                       className="w-16 p-2 border rounded text-center"
                       placeholder="1"
                     />
-                    <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mt-2 shadow-sm">
-                      Denominator
-                    </label>
                   </div>
                 </div>
 
@@ -476,22 +453,14 @@ export default function FractionCalculator() {
 
                 {/* Second Mixed Number */}
                 <div className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    value={mixedInputs.whole2}
+                    onChange={(e) => setMixedInputs({...mixedInputs, whole2: Number(e.target.value)})}
+                    className="w-16 p-2 border rounded text-center"
+                    placeholder="0"
+                  />
                   <div className="flex flex-col items-center">
-                    <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mb-2 shadow-sm">
-                      Whole
-                    </label>
-                    <input
-                      type="number"
-                      value={mixedInputs.whole2}
-                      onChange={(e) => setMixedInputs({...mixedInputs, whole2: Number(e.target.value)})}
-                      className="w-16 p-2 border rounded text-center"
-                      placeholder="0"
-                    />
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mb-2 shadow-sm">
-                      Numerator
-                    </label>
                     <input
                       type="number"
                       value={mixedInputs.num2}
@@ -507,9 +476,6 @@ export default function FractionCalculator() {
                       className="w-16 p-2 border rounded text-center"
                       placeholder="1"
                     />
-                    <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mt-2 shadow-sm">
-                      Denominator
-                    </label>
                   </div>
                 </div>
 
@@ -668,9 +634,7 @@ export default function FractionCalculator() {
               <div className="flex items-center justify-center gap-4">
                 {/* Whole Number */}
                 <div className="flex flex-col items-center">
-                  <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mb-2 shadow-sm">
-                    Whole Number
-                  </label>
+                  <label className="text-sm text-gray-600 mb-1">Whole</label>
                   <input
                     type="number"
                     name="simplifyWhole"
@@ -681,9 +645,7 @@ export default function FractionCalculator() {
 
                 {/* Fraction Part */}
                 <div className="flex flex-col items-center">
-                  <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mb-2 shadow-sm">
-                    Numerator
-                  </label>
+                  <label className="text-sm text-gray-600 mb-1">Numerator</label>
                   <input
                     type="number"
                     name="simplifyNum"
@@ -697,9 +659,7 @@ export default function FractionCalculator() {
                     className="w-20 p-2 border rounded text-center"
                     placeholder="98"
                   />
-                  <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mt-2 shadow-sm">
-                    Denominator
-                  </label>
+                  <label className="text-sm text-gray-600 mt-1">Denominator</label>
                 </div>
 
                 {/* Equals Sign */}

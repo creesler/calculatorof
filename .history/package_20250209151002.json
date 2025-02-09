@@ -32,8 +32,6 @@
     "pinterest-upload": "npx tsx scripts/pinterest-upload.ts"
   },
   "dependencies": {
-    "axios": "^1.7.9",
-    "dotenv": "^16.4.7",
     "next": "14.1.0",
     "next-seo": "^6.6.0",
     "react": "18.2.0",
@@ -43,7 +41,6 @@
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.7",
     "@tailwindcss/typography": "^0.5.10",
-    "@types/dotenv": "^8.2.3",
     "@types/node": "^20.11.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",

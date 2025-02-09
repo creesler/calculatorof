@@ -494,22 +494,11 @@ export default function FractionCalculator() {
                     </label>
                     <input
                       type="number"
-                      value={mixedInputs.num2}
-                      onChange={(e) => setMixedInputs({...mixedInputs, num2: Number(e.target.value)})}
-                      className="w-16 p-2 border rounded text-center"
-                      placeholder="0"
-                    />
-                    <div className="my-1 border-t border-black w-16"></div>
-                    <input
-                      type="number"
                       value={mixedInputs.den2}
                       onChange={(e) => setMixedInputs({...mixedInputs, den2: Number(e.target.value)})}
                       className="w-16 p-2 border rounded text-center"
                       placeholder="1"
                     />
-                    <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mt-2 shadow-sm">
-                      Denominator
-                    </label>
                   </div>
                 </div>
 
