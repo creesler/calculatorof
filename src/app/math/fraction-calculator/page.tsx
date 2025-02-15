@@ -173,8 +173,8 @@ export default function FractionCalculator() {
       const den2 = BigInt(bigFractionInput.den2);
 
       // Check for division by zero
-      if (den1 === 0n || den2 === 0n || 
-          (bigFractionInput.operation === 'divide' && num2 === 0n)) {
+      if (den1 === BigInt(0) || den2 === BigInt(0) || 
+          (bigFractionInput.operation === 'divide' && num2 === BigInt(0))) {
         setBigFractionResult(null);
         return;
       }
@@ -205,8 +205,8 @@ export default function FractionCalculator() {
 
       // Simplify the fraction using GCD
       const gcd = (a: bigint, b: bigint): bigint => {
-        a = a < 0n ? -a : a;
-        b = b < 0n ? -b : b;
+        a = a < BigInt(0) ? -a : a;
+        b = b < BigInt(0) ? -b : b;
         while (b) {
           [a, b] = [b, a % b];
         }
@@ -218,7 +218,7 @@ export default function FractionCalculator() {
       resultDen = resultDen / divisor;
 
       // Ensure denominator is positive
-      if (resultDen < 0n) {
+      if (resultDen < BigInt(0)) {
         resultNum = -resultNum;
         resultDen = -resultDen;
       }
@@ -1349,7 +1349,7 @@ export default function FractionCalculator() {
                               const den = BigInt(bigFractionResult.denominator);
                               const whole = num / den;
                               const remainder = num % den;
-                              return remainder === 0n ? 
+                              return remainder === BigInt(0) ? 
                                 whole.toString() : 
                                 `${whole} ${remainder}/${den}`;
                             })()}
