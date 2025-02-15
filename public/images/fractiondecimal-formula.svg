@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="280" viewBox="0 0 800 280" xmlns="http://www.w3.org/2000/svg">
+    <style>
+        .title { font: bold 18px sans-serif; fill: #2d3748; }
+        .formula { font: 16px sans-serif; fill: #4a5568; }
+        .math { font: bold 16px sans-serif; fill: #2b6cb0; }
+        .note { font: italic 14px sans-serif; fill: #718096; }
+        .box { fill: #f8fafc; stroke: #e2e8f0; stroke-width: 2; }
+        .divider { stroke: #e2e8f0; stroke-width: 1; }
+    </style>
+    
+    <!-- Background -->
+    <rect class="box" x="0" y="0" width="800" height="280" rx="4"/>
+    
+    <!-- Title -->
+    <text class="title" x="30" y="40">Converting Fractions to Decimals:</text>
+    
+    <!-- Method 1: Division Method -->
+    <text class="formula" x="30" y="80">1. Division Method:</text>
+    <text class="formula" x="50" y="110">• Divide numerator by denominator:</text>
+    <text class="math" x="70" y="135">3/4 = 3 ÷ 4 = 0.75</text>
+    <text class="formula" x="50" y="160">• Convert to percentage:</text>
+    <text class="math" x="70" y="185">0.75 × 100 = 75%</text>
+    
+    <!-- Method 2: Scientific Notation -->
+    <line class="divider" x1="400" y1="60" x2="400" y2="260"/>
+    <text class="formula" x="420" y="80">2. Scientific Notation:</text>
+    <text class="formula" x="440" y="110">• Express as powers of 10:</text>
+    <text class="math" x="440" y="135">0.75 = 7.5 × 10⁻¹</text>
+    <text class="formula" x="440" y="160">• Standard Form:</text>
+    <text class="math" x="440" y="185">7.5000e-1</text>
+    
+    <!-- Note -->
+    <text class="note" x="30" y="265">Note: Results are shown in decimal, percentage, and scientific notation</text>
+</svg> 

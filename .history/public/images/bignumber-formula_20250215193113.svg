@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="280" viewBox="0 0 800 280" xmlns="http://www.w3.org/2000/svg">
+    <style>
+        .title { font: bold 18px sans-serif; fill: #2d3748; }
+        .formula { font: 16px sans-serif; fill: #4a5568; }
+        .math { font: bold 16px sans-serif; fill: #2b6cb0; }
+        .note { font: italic 14px sans-serif; fill: #718096; }
+        .box { fill: #f8fafc; stroke: #e2e8f0; stroke-width: 2; }
+        .divider { stroke: #e2e8f0; stroke-width: 1; }
+    </style>
+    
+    <!-- Background -->
+    <rect class="box" x="0" y="0" width="800" height="280" rx="4"/>
+    
+    <!-- Title -->
+    <text class="title" x="30" y="40">Big Number Fraction Operations:</text>
+    
+    <!-- Method 1: Basic Operations -->
+    <text class="formula" x="30" y="80">1. Basic Operations:</text>
+    <text class="formula" x="50" y="110">• Addition (a/b + c/d):</text>
+    <text class="math" x="70" y="135">(a×d + b×c) / (b×d)</text>
+    <text class="formula" x="50" y="165">• Multiplication (a/b × c/d):</text>
+    <text class="math" x="70" y="190">(a×c) / (b×d)</text>
+    
+    <!-- Method 2: Simplification -->
+    <line class="divider" x1="400" y1="60" x2="400" y2="260"/>
+    <text class="formula" x="420" y="80">2. Simplification:</text>
+    <text class="formula" x="440" y="110">• Find GCD of numerator and denominator</text>
+    <text class="math" x="440" y="135">123456789/987654321</text>
+    <text class="formula" x="440" y="160">• Divide both by GCD:</text>
+    <text class="math" x="440" y="185">= 13717421/109739369</text>
+    
+    <!-- Note -->
+    <text class="note" x="30" y="265">Note: Calculator handles integers up to 20 digits and automatically simplifies results</text>
+</svg> 

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="400" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+    <style>
+        .calculator { fill: #ffffff; stroke: #e2e8f0; }
+        .input { fill: #f8fafc; stroke: #cbd5e1; }
+        .text { font-family: sans-serif; }
+        .title { font: bold 24px sans-serif; fill: #1e293b; }
+        .number { font: bold 20px sans-serif; fill: #2563eb; }
+        .label { font: 16px sans-serif; fill: #64748b; }
+        .result { font: bold 28px sans-serif; fill: #2563eb; }
+        .detail { font: 14px sans-serif; fill: #64748b; }
+    </style>
+    
+    <!-- Calculator Background -->
+    <rect class="calculator" x="0" y="0" width="800" height="400" rx="8"/>
+    
+    <!-- Title -->
+    <text class="title" x="40" y="50">Fraction to Decimal Calculator</text>
+    
+    <!-- Input Section -->
+    <g transform="translate(100,100)">
+        <!-- Fraction Input -->
+        <text class="number" x="0" y="30">3</text>
+        <line x1="0" y1="40" x2="40" y2="40" stroke="#000000" stroke-width="2"/>
+        <text class="number" x="0" y="70">4</text>
+        
+        <!-- Equals Sign -->
+        <text class="number" x="80" y="50">=</text>
+        
+        <!-- Results -->
+        <g transform="translate(150,0)">
+            <text class="result" x="0" y="50">0.750000</text>
+            <text class="detail" x="0" y="80">Percentage: 75.00%</text>
+            <text class="detail" x="0" y="110">Scientific: 7.5000e-1</text>
+        </g>
+    </g>
+</svg> 
