@@ -16,9 +16,7 @@ export default function ServiceWorkerRegistration() {
           }
           
           registration.addEventListener('statechange', (e) => {
-            if (e.target && 'state' in e.target) {
-              console.log('Service Worker state changed:', (e.target as ServiceWorker).state)
-            }
+            console.log('Service Worker state changed:', e.target.state)
           })
         } catch (error) {
           console.error('Service Worker registration failed:', error)

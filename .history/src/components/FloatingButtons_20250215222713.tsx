@@ -51,9 +51,6 @@ export default function FloatingButtons() {
     // Check manifest
     const linkElement = document.querySelector('link[rel="manifest"]');
     console.log('Manifest found:', !!linkElement);
-
-    // Run PWA criteria check
-    checkPWACriteria();
   }, []);
 
   const scrollToTop = () => {
@@ -133,45 +130,6 @@ export default function FloatingButtons() {
     } catch (error) {
       console.error('Error tracking installation:', error);
     }
-  };
-
-  const checkPWACriteria = async () => {
-    console.group('PWA Installation Criteria Check');
-    
-    // Check HTTPS
-    console.log('HTTPS:', window.location.protocol === 'https:');
-    
-    // Check Service Worker
-    console.log('Service Worker Support:', 'serviceWorker' in navigator);
-    
-    // Check Service Worker Registration
-    if ('serviceWorker' in navigator) {
-      const registrations = await navigator.serviceWorker.getRegistrations();
-      console.log('Active Service Workers:', registrations.length);
-    }
-    
-    // Check Manifest
-    const manifestLink = document.querySelector('link[rel="manifest"]');
-    console.log('Manifest:', {
-      exists: !!manifestLink,
-      href: manifestLink?.getAttribute('href')
-    });
-    
-    // Check Icons
-    const icons = document.querySelectorAll('link[rel="apple-touch-icon"], link[rel="icon"]');
-    console.log('Icons found:', icons.length);
-    
-    // Check Display Mode
-    console.log('Display Mode:', window.matchMedia('(display-mode: standalone)').matches ? 'standalone' : 'browser');
-    
-    // Platform Info
-    console.log('Platform:', {
-      current: platform,
-      deferredPrompt: !!deferredPrompt,
-      showPrompt: showInstallPrompt
-    });
-    
-    console.groupEnd();
   };
 
   // Add this debug button in development
