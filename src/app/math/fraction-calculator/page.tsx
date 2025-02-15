@@ -67,6 +67,23 @@ export default function FractionCalculator() {
   const [decimalInput, setDecimalInput] = useState('')
   const [fractionResult, setFractionResult] = useState<{ numerator: number, denominator: number } | null>(null)
 
+  const [fractionInput, setFractionInput] = useState({
+    numerator: 0,
+    denominator: 1
+  })
+
+  const [decimalResult, setDecimalResult] = useState<number | null>(null)
+
+  const [bigFractionInput, setBigFractionInput] = useState({
+    num1: '',
+    den1: '',
+    num2: '',
+    den2: '',
+    operation: 'add'
+  })
+
+  const [bigFractionResult, setBigFractionResult] = useState<{ numerator: string, denominator: string } | null>(null)
+
   const handleCalculate = (e: FormEvent) => {
     e.preventDefault()
     let num: number, den: number
@@ -137,6 +154,84 @@ export default function FractionCalculator() {
       den: simplified.den
     })
   }
+
+  const handleBigFractionCalculate = (e: FormEvent) => {
+    e.preventDefault();
+    
+    // Validate inputs
+    if (!bigFractionInput.num1 || !bigFractionInput.den1 || 
+        !bigFractionInput.num2 || !bigFractionInput.den2) {
+      setBigFractionResult(null);
+      return;
+    }
+
+    // Convert strings to BigInts for large number calculations
+    try {
+      const num1 = BigInt(bigFractionInput.num1);
+      const den1 = BigInt(bigFractionInput.den1);
+      const num2 = BigInt(bigFractionInput.num2);
+      const den2 = BigInt(bigFractionInput.den2);
+
+      // Check for division by zero
+      if (den1 === 0n || den2 === 0n || 
+          (bigFractionInput.operation === 'divide' && num2 === 0n)) {
+        setBigFractionResult(null);
+        return;
+      }
+
+      let resultNum: bigint, resultDen: bigint;
+
+      // Perform the selected operation
+      switch (bigFractionInput.operation) {
+        case 'add':
+          resultNum = num1 * den2 + num2 * den1;
+          resultDen = den1 * den2;
+          break;
+        case 'subtract':
+          resultNum = num1 * den2 - num2 * den1;
+          resultDen = den1 * den2;
+          break;
+        case 'multiply':
+          resultNum = num1 * num2;
+          resultDen = den1 * den2;
+          break;
+        case 'divide':
+          resultNum = num1 * den2;
+          resultDen = den1 * num2;
+          break;
+        default:
+          return;
+      }
+
+      // Simplify the fraction using GCD
+      const gcd = (a: bigint, b: bigint): bigint => {
+        a = a < 0n ? -a : a;
+        b = b < 0n ? -b : b;
+        while (b) {
+          [a, b] = [b, a % b];
+        }
+        return a;
+      };
+
+      const divisor = gcd(resultNum, resultDen);
+      resultNum = resultNum / divisor;
+      resultDen = resultDen / divisor;
+
+      // Ensure denominator is positive
+      if (resultDen < 0n) {
+        resultNum = -resultNum;
+        resultDen = -resultDen;
+      }
+
+      setBigFractionResult({
+        numerator: resultNum.toString(),
+        denominator: resultDen.toString()
+      });
+    } catch (error) {
+      console.error('Error in calculation:', error);
+      setBigFractionResult(null);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 relative">
@@ -970,6 +1065,369 @@ export default function FractionCalculator() {
                 </div>
               </div>
             </details>
+          </div>
+        </div>
+
+        {/* Fraction to Decimal Calculator */}
+        <div className="max-w-2xl mx-auto mt-12">
+          <h2 className="text-2xl font-bold mb-4">Fraction to Decimal Calculator</h2>
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="calculator-grid">
+              <div className="flex items-center justify-center gap-4">
+                {/* Fraction Input */}
+                <div className="flex flex-col items-center">
+                  <input 
+                    type="number" 
+                    placeholder="Numerator"
+                    value={fractionInput.numerator}
+                    onChange={(e) => setFractionInput({
+                      ...fractionInput,
+                      numerator: Number(e.target.value)
+                    })}
+                    className="w-32 p-2 border rounded text-center"
+                  />
+                  <div className="my-1 border-t border-black w-20"></div>
+                  <input 
+                    type="number" 
+                    placeholder="Denominator"
+                    value={fractionInput.denominator}
+                    onChange={(e) => setFractionInput({
+                      ...fractionInput,
+                      denominator: Number(e.target.value)
+                    })}
+                    className="w-32 p-2 border rounded text-center"
+                  />
+                </div>
+
+                {/* Equals Sign */}
+                <div className="text-2xl font-bold">=</div>
+
+                {/* Result */}
+                <div className="w-48 p-2 text-center min-h-[60px]">
+                  {decimalResult !== null && (
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <div className="text-2xl font-bold text-blue-600 mb-4">
+                        {decimalResult.toFixed(6)}
+                      </div>
+                      
+                      <div className="space-y-2 text-sm text-gray-600">
+                        <p>
+                          <span className="font-semibold">Percentage:</span>{' '}
+                          <span className="text-orange-600 font-bold">
+                            {(decimalResult * 100).toFixed(2)}%
+                          </span>
+                        </p>
+                        <p>
+                          <span className="font-semibold">Scientific Notation:</span>{' '}
+                          <span className="text-green-600 font-bold">
+                            {decimalResult.toExponential(4)}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex justify-center mt-6">
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (!fractionInput.denominator) {
+                      setDecimalResult(null);
+                      return;
+                    }
+                    setDecimalResult(fractionInput.numerator / fractionInput.denominator);
+                  }}
+                  type="button"
+                  className="px-8 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
+                  Calculate
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Fraction to Decimal Details Dropdown */}
+          <div className="mt-4">
+            <details className="bg-white rounded-lg shadow-lg">
+              <summary className="p-6 text-lg font-semibold cursor-pointer hover:bg-gray-50">
+                More Details About Fraction to Decimal Conversion
+              </summary>
+              <div className="px-6 pb-6">
+                <div className="prose max-w-none">
+                  <p>
+                    Convert any fraction to its decimal and percentage equivalents. The calculator handles both proper 
+                    and improper fractions, providing results in standard decimal and scientific notation.
+                  </p>
+
+                  <h3>How It Works</h3>
+                  <ol className="list-decimal pl-5 space-y-2">
+                    <li>Enter the numerator (top number)</li>
+                    <li>Enter the denominator (bottom number)</li>
+                    <li>Click Calculate to see the decimal equivalent</li>
+                    <li>View results in decimal, percentage, and scientific notation</li>
+                  </ol>
+
+                  <div className="bg-gray-50 p-4 rounded-lg my-4">
+                    <p className="font-semibold mb-2">Common Fraction to Decimal Examples:</p>
+                    <ul className="list-disc pl-5 space-y-1">
+                      <li>1/2 = 0.5 = 50%</li>
+                      <li>1/4 = 0.25 = 25%</li>
+                      <li>3/4 = 0.75 = 75%</li>
+                      <li>1/3 = 0.333... = 33.33%</li>
+                      <li>2/3 = 0.666... = 66.67%</li>
+                    </ul>
+                  </div>
+
+                  <h3>Example Calculation</h3>
+                  <Image
+                    src="/images/fractiondecimalcalculator.webp"
+                    alt="Free online fraction to decimal calculator showing 3/4 converted to 0.75, with instant conversion to percentage (75%) and scientific notation (7.5000e-1). Perfect for students, teachers, and anyone working with fraction conversions. Features clear display and multiple number formats."
+                    width={800}
+                    height={400}
+                    className="rounded-lg shadow-lg mb-4"
+                    priority
+                  />
+                  <p className="text-sm text-gray-600 mb-6">
+                    Example: Converting fraction 3/4 to decimal 0.75, showing decimal, percentage, and scientific notation formats.
+                  </p>
+
+                  <h3>Conversion Formulas</h3>
+                  <Image
+                    src="/images/fractiondecimal-formula.webp"
+                    alt="Master fraction to decimal conversions with our comprehensive formula guide. Learn division method (3/4 = 0.75), percentage conversion (75%), and scientific notation (7.5 × 10⁻¹). Perfect for students, teachers, and professionals. Includes step-by-step examples and multiple number formats for better understanding."
+                    width={800}
+                    height={200}
+                    className="rounded-lg shadow-md my-4"
+                    priority
+                  />
+                  <p className="text-sm text-gray-600 mb-6">
+                    Step-by-step formulas showing division method, percentage conversion, and scientific notation representation.
+                  </p>
+                </div>
+              </div>
+            </details>
+          </div>
+        </div>
+
+        {/* Big Number Fraction Calculator */}
+        <div className="max-w-2xl mx-auto mt-12">
+          <h2 className="text-2xl font-bold mb-4">Big Number Fraction Calculator</h2>
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <form className="space-y-6">
+              <div className="flex items-center justify-center gap-8">
+                {/* First Fraction */}
+                <div className="flex flex-col items-center">
+                  <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mb-2 shadow-sm">
+                    First Fraction
+                  </label>
+                  <input 
+                    type="text" 
+                    placeholder="0"
+                    value={bigFractionInput.num1}
+                    onChange={(e) => setBigFractionInput({
+                      ...bigFractionInput,
+                      num1: e.target.value.replace(/[^0-9]/g, '')
+                    })}
+                    className="w-32 p-2 border rounded text-center"
+                  />
+                  <div className="my-1 border-t border-black w-20"></div>
+                  <input 
+                    type="text" 
+                    placeholder="1"
+                    value={bigFractionInput.den1}
+                    onChange={(e) => setBigFractionInput({
+                      ...bigFractionInput,
+                      den1: e.target.value.replace(/[^0-9]/g, '')
+                    })}
+                    className="w-32 p-2 border rounded text-center"
+                  />
+                </div>
+
+                {/* Operation */}
+                <div className="flex flex-col items-center">
+                  <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mb-2 shadow-sm">
+                    Operation
+                  </label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setBigFractionInput({ ...bigFractionInput, operation: 'add' })}
+                      className={`px-4 py-2 rounded ${
+                        bigFractionInput.operation === 'add' 
+                          ? 'bg-blue-600 text-white' 
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      +
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setBigFractionInput({ ...bigFractionInput, operation: 'subtract' })}
+                      className={`px-4 py-2 rounded ${
+                        bigFractionInput.operation === 'subtract' 
+                          ? 'bg-blue-600 text-white' 
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      −
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setBigFractionInput({ ...bigFractionInput, operation: 'multiply' })}
+                      className={`px-4 py-2 rounded ${
+                        bigFractionInput.operation === 'multiply' 
+                          ? 'bg-blue-600 text-white' 
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      ×
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setBigFractionInput({ ...bigFractionInput, operation: 'divide' })}
+                      className={`px-4 py-2 rounded ${
+                        bigFractionInput.operation === 'divide' 
+                          ? 'bg-blue-600 text-white' 
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      ÷
+                    </button>
+                  </div>
+                </div>
+
+                {/* Second Fraction */}
+                <div className="flex flex-col items-center">
+                  <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mb-2 shadow-sm">
+                    Second Fraction
+                  </label>
+                  <input 
+                    type="text" 
+                    placeholder="0"
+                    value={bigFractionInput.num2}
+                    onChange={(e) => setBigFractionInput({
+                      ...bigFractionInput,
+                      num2: e.target.value.replace(/[^0-9]/g, '')
+                    })}
+                    className="w-32 p-2 border rounded text-center"
+                  />
+                  <div className="my-1 border-t border-black w-20"></div>
+                  <input 
+                    type="text" 
+                    placeholder="1"
+                    value={bigFractionInput.den2}
+                    onChange={(e) => setBigFractionInput({
+                      ...bigFractionInput,
+                      den2: e.target.value.replace(/[^0-9]/g, '')
+                    })}
+                    className="w-32 p-2 border rounded text-center"
+                  />
+                </div>
+
+                {/* Equals Sign */}
+                <div className="text-2xl font-bold">=</div>
+
+                {/* Result */}
+                <div className="w-48 p-2 text-center min-h-[60px]">
+                  {bigFractionResult && (
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <div className="flex flex-col items-center mb-4">
+                        <p className="font-semibold text-gray-700 mb-2">Simplified Fraction:</p>
+                        <span className="text-xl font-bold text-blue-600 break-all">{bigFractionResult.numerator}</span>
+                        <div className="my-1 border-t border-black w-full"></div>
+                        <span className="text-xl font-bold text-blue-600 break-all">{bigFractionResult.denominator}</span>
+                      </div>
+                      
+                      <div className="space-y-2 text-sm text-gray-600">
+                        <p>
+                          <span className="font-semibold">Mixed Number:</span>{' '}
+                          <span className="text-purple-600 font-bold">
+                            {(() => {
+                              const num = BigInt(bigFractionResult.numerator);
+                              const den = BigInt(bigFractionResult.denominator);
+                              const whole = num / den;
+                              const remainder = num % den;
+                              return remainder === 0n ? 
+                                whole.toString() : 
+                                `${whole} ${remainder}/${den}`;
+                            })()}
+                          </span>
+                        </p>
+                        <p>
+                          <span className="font-semibold">Decimal:</span>{' '}
+                          <span className="text-green-600 font-bold">
+                            {(Number(bigFractionResult.numerator) / Number(bigFractionResult.denominator)).toFixed(6)}
+                          </span>
+                        </p>
+                        <p>
+                          <span className="font-semibold">Percentage:</span>{' '}
+                          <span className="text-orange-600 font-bold">
+                            {((Number(bigFractionResult.numerator) / Number(bigFractionResult.denominator)) * 100).toFixed(2)}%
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex justify-center">
+                <button
+                  onClick={handleBigFractionCalculate}
+                  type="button"
+                  className="px-8 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
+                  Calculate
+                </button>
+              </div>
+            </form>
+          </div>
+
+          {/* Info Section */}
+          <div className="mt-4 bg-white rounded-lg shadow-lg p-6">
+            <h3 className="font-semibold mb-3">About Big Number Fraction Calculator</h3>
+            <p className="text-gray-600 mb-4">
+              This calculator handles very large integers and simplifies them to their lowest terms. 
+              Enter whole numbers only (no decimals or commas).
+            </p>
+            
+            <h3>Example Calculation</h3>
+            <Image
+              src="/images/bignumberscalculator.webp"
+              alt="Free online big number fraction calculator handling large integers up to 20 digits. Shows multiplication of 123456789/987654321 × 987654321/123456789, with automatic simplification, mixed number conversion, and percentage calculation. Perfect for mathematicians, engineers, and students working with large fractions."
+              width={800}
+              height={400}
+              className="rounded-lg shadow-lg mb-4"
+              priority
+            />
+            <p className="text-sm text-gray-600 mb-6">
+              Example: Calculating with large numbers (123456789/987654321), showing simplified result with mixed number and decimal equivalents.
+            </p>
+            
+            <h3>Formula Guide</h3>
+            <Image
+              src="/images/bignumber-formula.webp"
+              alt="Essential big number fraction formulas: Learn how to perform operations with large fractions (up to 20 digits). Shows addition (a/b + c/d), multiplication (a/b × c/d), and simplification using GCD method. Perfect for advanced mathematics, engineering calculations, and precise fraction arithmetic."
+              width={800}
+              height={200}
+              className="rounded-lg shadow-md my-4"
+              priority
+            />
+            <p className="text-sm text-gray-600 mb-6">
+              Step-by-step formulas showing fraction operations and simplification methods for large numbers.
+            </p>
+            
+            <div className="text-sm text-gray-600">
+              <p className="font-semibold mb-2">Usage Notes:</p>
+              <ul className="list-disc pl-5 space-y-1">
+                <li>Maximum input: 20 digits per number</li>
+                <li>Denominator cannot be zero</li>
+                <li>Results are automatically simplified</li>
+                <li>No scientific notation used</li>
+              </ul>
+            </div>
           </div>
         </div>
 
