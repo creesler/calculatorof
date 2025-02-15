@@ -23,10 +23,30 @@ export default function FloatingButtons() {
     } else if (/Android/.test(userAgent)) {
       console.log('Platform detected: Android');
       setPlatform('android');
+      // Show prompt for Android immediately
+      setShowInstallPrompt(true);
     } else if (/Windows/.test(userAgent)) {
       console.log('Platform detected: Windows');
       setPlatform('windows');
     }
+
+    // Modified condition to show install button
+    const shouldShowInstallButton = () => {
+      // Always show for iOS Safari
+      if (platform === 'ios') return true;
+      // Always show for Android Chrome
+      if (platform === 'android' && /Chrome/.test(userAgent)) return true;
+      // Show for Windows if installable
+      if (platform === 'windows' && deferredPrompt) return true;
+      return false;
+    };
+
+    // Debug visibility conditions
+    console.log('Install button visibility:', {
+      platform,
+      hasPrompt: !!deferredPrompt,
+      shouldShow: shouldShowInstallButton()
+    });
 
     // Listen for install prompt
     window.addEventListener('beforeinstallprompt', (e) => {
@@ -54,7 +74,7 @@ export default function FloatingButtons() {
 
     // Run PWA criteria check
     checkPWACriteria();
-  }, []);
+  }, [platform, deferredPrompt]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -191,10 +211,8 @@ export default function FloatingButtons() {
   return (
     <>
       {/* Install Prompt */}
-      {platform && (platform === 'ios' || deferredPrompt) && showInstallPrompt && (
-        <div 
-          className="fixed top-4 left-4 right-4 bg-white p-4 rounded-lg shadow-lg z-50 md:left-auto md:right-4 md:w-96 border border-gray-200 slide-in"
-        >
+      {showInstallPrompt && (
+        <div className="fixed top-4 left-4 right-4 bg-white p-4 rounded-lg shadow-lg z-50 md:left-auto md:right-4 md:w-96 border border-gray-200 slide-in">
           {/* Close button */}
           <button
             onClick={() => setShowInstallPrompt(false)}
@@ -241,8 +259,8 @@ export default function FloatingButtons() {
           <FaHome className="h-6 w-6" />
         </Link>
 
-        {/* Install Icon Button */}
-        {platform && (platform === 'ios' || deferredPrompt) && (
+        {/* Install Icon Button - Modified condition */}
+        {platform && (
           <button
             onClick={handleInstallClick}
             className="bg-purple-600 text-white p-3 rounded-full shadow-lg hover:bg-purple-700 transition-colors"
