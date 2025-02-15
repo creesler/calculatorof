@@ -3,6 +3,8 @@ import './globals.css'
 import { NextSeo } from 'next-seo'
 import Link from 'next/link'
 import Navigation from '@/components/Navigation'
+import ServiceWorkerRegistration from '@/components/ServiceWorkerRegistration'
+import PWAInstallPrompt from '@/components/PWAInstallPrompt'
 
 // Separate viewport configuration
 export const viewport: Viewport = {
@@ -62,13 +64,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <meta name="p:domain_verify" content="8b307b5b857ccc07264de92450c3dd3f" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#3b82f6" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Calculator Suite" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </head>
       <body>
+        <ServiceWorkerRegistration />
+        <PWAInstallPrompt />
         <Navigation />
         {children}
 
@@ -137,17 +142,6 @@ export default function RootLayout({
             </div>
           </div>
         </footer>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                  navigator.serviceWorker.register('/sw.js');
-                });
-              }
-            `,
-          }}
-        />
       </body>
     </html>
   )
