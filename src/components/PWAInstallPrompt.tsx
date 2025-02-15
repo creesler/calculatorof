@@ -7,7 +7,15 @@ export default function PWAInstallPrompt() {
   const [showInstallButton, setShowInstallButton] = useState(false)
 
   useEffect(() => {
+    // Check if the app is already installed
+    const isAppInstalled = window.matchMedia('(display-mode: standalone)').matches
+    if (isAppInstalled) {
+      console.log('App is already installed')
+      return
+    }
+
     const handler = (e: Event) => {
+      console.log('beforeinstallprompt fired')
       // Prevent Chrome 67 and earlier from automatically showing the prompt
       e.preventDefault()
       // Stash the event so it can be triggered later
@@ -16,14 +24,35 @@ export default function PWAInstallPrompt() {
       setShowInstallButton(true)
     }
 
+    // Check if PWA criteria are met
+    if ('serviceWorker' in navigator) {
+      console.log('Service Worker is supported')
+      navigator.serviceWorker.getRegistration().then(registration => {
+        console.log('Service Worker registration:', registration)
+      })
+    }
+
+    // Check if manifest is loaded
+    const manifestLink = document.querySelector('link[rel="manifest"]')
+    console.log('Manifest link found:', manifestLink !== null)
+
     window.addEventListener('beforeinstallprompt', handler)
+    
+    // Log when app is installed
+    window.addEventListener('appinstalled', (e) => {
+      console.log('PWA was installed')
+    })
 
     return () => window.removeEventListener('beforeinstallprompt', handler)
   }, [])
 
   const handleInstallClick = async () => {
-    if (!deferredPrompt) return
+    if (!deferredPrompt) {
+      console.log('No deferred prompt available')
+      return
+    }
 
+    console.log('Showing install prompt')
     // Show the install prompt
     deferredPrompt.prompt()
 
@@ -39,7 +68,7 @@ export default function PWAInstallPrompt() {
   if (!showInstallButton) return null
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 bg-white p-4 rounded-lg shadow-lg z-50 md:left-auto md:right-4 md:w-96">
+    <div className="fixed bottom-4 left-4 right-4 bg-white p-4 rounded-lg shadow-lg z-50 md:left-auto md:right-4 md:w-96 border border-gray-200">
       <div className="flex items-start justify-between">
         <div>
           <h3 className="text-lg font-semibold">Install Calculator Suite</h3>
