@@ -241,19 +241,24 @@ export default function FractionCalculator() {
         <h1 className="text-4xl font-bold text-center mb-8">Fraction Calculator</h1>
         
         {/* Main Fraction Calculator */}
-        <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-6">
+        <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-4 sm:p-6">
           <form onSubmit={handleCalculate} className="space-y-6">
-            <div className="flex items-center justify-center gap-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-6 sm:px-4">
               {/* First Fraction */}
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center w-full sm:w-auto">
                 <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mb-2 shadow-sm">
-                  Numerator
+                  First Fraction
                 </label>
-                <input
+                <input 
                   type="number"
                   value={inputs.num1}
-                  onChange={(e) => setInputs({...inputs, num1: Number(e.target.value)})}
-                  className="w-20 p-2 border rounded text-center"
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === '' || /^-?\d*$/.test(value)) {
+                      setInputs({...inputs, num1: value === '' ? 0 : parseInt(value)})
+                    }
+                  }}
+                  className="w-32 p-2 border rounded text-center"
                   placeholder="0"
                 />
                 <div className="my-1 border-t border-black w-20"></div>
@@ -261,16 +266,13 @@ export default function FractionCalculator() {
                   type="number"
                   value={inputs.den1}
                   onChange={(e) => setInputs({...inputs, den1: Number(e.target.value)})}
-                  className="w-20 p-2 border rounded text-center"
+                  className="w-32 p-2 border rounded text-center"
                   placeholder="1"
                 />
-                <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mt-2 shadow-sm">
-                  Denominator
-                </label>
               </div>
 
-              {/* Operation Selector - Vertical */}
-              <div className="flex flex-col gap-2 mx-2">
+              {/* Operation Selector - Horizontal on mobile */}
+              <div className="flex sm:flex-col justify-center gap-2 w-full sm:w-auto">
                 <label className="cursor-pointer">
                   <input
                     type="radio"
@@ -280,7 +282,7 @@ export default function FractionCalculator() {
                     onChange={(e) => setInputs({...inputs, operation: e.target.value as FractionInputs['operation']})}
                     className="hidden"
                   />
-                  <span className={`w-10 h-10 flex items-center justify-center text-xl font-bold rounded-full border-2 
+                  <span className={`w-12 h-12 flex items-center justify-center text-xl font-bold rounded-full border-2 
                     ${inputs.operation === 'add' ? 'bg-blue-500 text-white border-blue-500' : 'bg-white text-gray-700 border-gray-300 hover:border-blue-500'}`}>
                     +
                   </span>
@@ -294,7 +296,7 @@ export default function FractionCalculator() {
                     onChange={(e) => setInputs({...inputs, operation: e.target.value as FractionInputs['operation']})}
                     className="hidden"
                   />
-                  <span className={`w-10 h-10 flex items-center justify-center text-xl font-bold rounded-full border-2 
+                  <span className={`w-12 h-12 flex items-center justify-center text-xl font-bold rounded-full border-2 
                     ${inputs.operation === 'subtract' ? 'bg-blue-500 text-white border-blue-500' : 'bg-white text-gray-700 border-gray-300 hover:border-blue-500'}`}>
                     -
                   </span>
@@ -308,7 +310,7 @@ export default function FractionCalculator() {
                     onChange={(e) => setInputs({...inputs, operation: e.target.value as FractionInputs['operation']})}
                     className="hidden"
                   />
-                  <span className={`w-10 h-10 flex items-center justify-center text-xl font-bold rounded-full border-2 
+                  <span className={`w-12 h-12 flex items-center justify-center text-xl font-bold rounded-full border-2 
                     ${inputs.operation === 'multiply' ? 'bg-blue-500 text-white border-blue-500' : 'bg-white text-gray-700 border-gray-300 hover:border-blue-500'}`}>
                     ×
                   </span>
@@ -322,7 +324,7 @@ export default function FractionCalculator() {
                     onChange={(e) => setInputs({...inputs, operation: e.target.value as FractionInputs['operation']})}
                     className="hidden"
                   />
-                  <span className={`w-10 h-10 flex items-center justify-center text-xl font-bold rounded-full border-2 
+                  <span className={`w-12 h-12 flex items-center justify-center text-xl font-bold rounded-full border-2 
                     ${inputs.operation === 'divide' ? 'bg-blue-500 text-white border-blue-500' : 'bg-white text-gray-700 border-gray-300 hover:border-blue-500'}`}>
                     ÷
                   </span>
@@ -330,15 +332,15 @@ export default function FractionCalculator() {
               </div>
 
               {/* Second Fraction */}
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center w-full sm:w-auto">
                 <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mb-2 shadow-sm">
-                  Numerator
+                  Second Fraction
                 </label>
                 <input
                   type="number"
                   value={inputs.num2}
                   onChange={(e) => setInputs({...inputs, num2: Number(e.target.value)})}
-                  className="w-20 p-2 border rounded text-center"
+                  className="w-32 p-2 border rounded text-center"
                   placeholder="0"
                 />
                 <div className="my-1 border-t border-black w-20"></div>
@@ -346,61 +348,57 @@ export default function FractionCalculator() {
                   type="number"
                   value={inputs.den2}
                   onChange={(e) => setInputs({...inputs, den2: Number(e.target.value)})}
-                  className="w-20 p-2 border rounded text-center"
+                  className="w-32 p-2 border rounded text-center"
                   placeholder="1"
                 />
-                <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mt-2 shadow-sm">
-                  Denominator
-                </label>
               </div>
 
-              {/* Equals Sign */}
-              <div className="text-2xl font-bold">=</div>
-
-              {/* Result with Details */}
-              {result && (
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <div className="flex flex-col items-center mb-4">
-                    <span className="text-2xl font-bold text-blue-600">{result.num}</span>
-                    <div className="my-1 border-t border-black w-20"></div>
-                    <span className="text-2xl font-bold text-blue-600">{result.den}</span>
+              {/* Result Section */}
+              <div className="w-full sm:w-48 p-2 text-center">
+                {result && (
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <div className="flex flex-col items-center mb-4">
+                      <span className="text-2xl font-bold text-blue-600">{result.num}</span>
+                      <div className="my-1 border-t border-black w-20"></div>
+                      <span className="text-2xl font-bold text-blue-600">{result.den}</span>
+                    </div>
+                    
+                    <div className="space-y-2 text-sm text-gray-600">
+                      <p>
+                        <span className="font-semibold">Decimal:</span>{' '}
+                        <span className="text-green-600 font-bold">
+                          {(result.num / result.den).toFixed(3)}
+                        </span>
+                      </p>
+                      <p>
+                        <span className="font-semibold">Mixed Number:</span>{' '}
+                        <span className="text-purple-600 font-bold">
+                          {Math.floor(result.num / result.den)}
+                          {result.num % result.den !== 0 && (
+                            <>
+                              {' '}
+                              <span className="inline-flex flex-col items-center mx-1">
+                                <span>{result.num % result.den}</span>
+                                <div className="border-t border-black w-4"></div>
+                                <span>{result.den}</span>
+                              </span>
+                            </>
+                          )}
+                        </span>
+                      </p>
+                      <p>
+                        <span className="font-semibold">Percentage:</span>{' '}
+                        <span className="text-orange-600 font-bold">
+                          {((result.num / result.den) * 100).toFixed(1)}%
+                        </span>
+                      </p>
+                    </div>
                   </div>
-                  
-                  <div className="space-y-2 text-sm text-gray-600">
-                    <p>
-                      <span className="font-semibold">Decimal:</span>{' '}
-                      <span className="text-green-600 font-bold">
-                        {(result.num / result.den).toFixed(3)}
-                      </span>
-                    </p>
-                    <p>
-                      <span className="font-semibold">Mixed Number:</span>{' '}
-                      <span className="text-purple-600 font-bold">
-                        {Math.floor(result.num / result.den)}
-                        {result.num % result.den !== 0 && (
-                          <>
-                            {' '}
-                            <span className="inline-flex flex-col items-center mx-1">
-                              <span>{result.num % result.den}</span>
-                              <div className="border-t border-black w-4"></div>
-                              <span>{result.den}</span>
-                            </span>
-                          </>
-                        )}
-                      </span>
-                    </p>
-                    <p>
-                      <span className="font-semibold">Percentage:</span>{' '}
-                      <span className="text-orange-600 font-bold">
-                        {((result.num / result.den) * 100).toFixed(1)}%
-                      </span>
-                    </p>
-                  </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
 
-            <div className="flex justify-center">
+            <div className="flex justify-center mt-4">
               <button
                 type="submit"
                 className="px-8 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
@@ -470,283 +468,192 @@ export default function FractionCalculator() {
         {/* Mixed Numbers Calculator */}
         <div className="max-w-2xl mx-auto mt-12">
           <h2 className="text-2xl font-bold mb-4">Mixed Numbers Calculator</h2>
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <form onSubmit={handleMixedCalculate} className="space-y-6">
-              <div className="flex items-center justify-center gap-4">
+          <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6">
+            <form className="space-y-6">
+              <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-6 sm:px-4">
                 {/* First Mixed Number */}
-                <div className="flex items-center gap-2">
-                  <div className="flex flex-col items-center">
-                    <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mb-2 shadow-sm">
-                      Whole
-                    </label>
-                    <input
+                <div className="flex flex-col items-center w-full sm:w-auto">
+                  <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mb-2 shadow-sm">
+                    First Mixed Number
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <input 
                       type="number"
+                      placeholder="Whole"
                       value={mixedInputs.whole1}
-                      onChange={(e) => setMixedInputs({...mixedInputs, whole1: Number(e.target.value)})}
-                      className="w-16 p-2 border rounded text-center"
-                      placeholder="0"
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (value === '' || /^-?\d*$/.test(value)) {
+                          setMixedInputs({...mixedInputs, whole1: value === '' ? 0 : parseInt(value)})
+                        }
+                      }}
+                      className="w-20 p-2 border rounded text-center"
                     />
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mb-2 shadow-sm">
-                      Numerator
-                    </label>
-                    <input
-                      type="number"
-                      value={mixedInputs.num1}
-                      onChange={(e) => setMixedInputs({...mixedInputs, num1: Number(e.target.value)})}
-                      className="w-16 p-2 border rounded text-center"
-                      placeholder="0"
-                    />
-                    <div className="my-1 border-t border-black w-16"></div>
-                    <input
-                      type="number"
-                      value={mixedInputs.den1}
-                      onChange={(e) => setMixedInputs({...mixedInputs, den1: Number(e.target.value)})}
-                      className="w-16 p-2 border rounded text-center"
-                      placeholder="1"
-                    />
-                    <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mt-2 shadow-sm">
-                      Denominator
-                    </label>
+                    <div className="flex flex-col">
+                      <input 
+                        type="number"
+                        placeholder="Num"
+                        value={mixedInputs.num1}
+                        onChange={(e) => setMixedInputs({...mixedInputs, num1: Number(e.target.value)})}
+                        className="w-20 p-2 border rounded text-center"
+                      />
+                      <div className="my-1 border-t border-black w-full"></div>
+                      <input 
+                        type="number"
+                        placeholder="Den"
+                        value={mixedInputs.den1}
+                        onChange={(e) => setMixedInputs({...mixedInputs, den1: Number(e.target.value)})}
+                        className="w-20 p-2 border rounded text-center"
+                      />
+                    </div>
                   </div>
                 </div>
 
-                {/* Operation Selector - Vertical */}
-                <div className="flex flex-col gap-2 mx-2">
-                  <label className="cursor-pointer">
-                    <input
-                      type="radio"
-                      name="operation"
-                      value="add"
-                      checked={mixedInputs.operation === 'add'}
-                      onChange={(e) => setMixedInputs({...mixedInputs, operation: e.target.value as MixedNumberInputs['operation']})}
-                      className="hidden"
-                    />
-                    <span className={`w-10 h-10 flex items-center justify-center text-xl font-bold rounded-full border-2 
-                      ${mixedInputs.operation === 'add' ? 'bg-blue-500 text-white border-blue-500' : 'bg-white text-gray-700 border-gray-300 hover:border-blue-500'}`}>
+                {/* Operation */}
+                <div className="flex flex-col items-center w-full sm:w-auto">
+                  <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mb-2 shadow-sm">
+                    Operation
+                  </label>
+                  <div className="grid grid-cols-4 sm:grid-cols-2 gap-2 w-full">
+                    <button
+                      type="button"
+                      onClick={() => setMixedInputs({...mixedInputs, operation: 'add'})}
+                      className={`px-4 py-2 rounded ${
+                        mixedInputs.operation === 'add' 
+                          ? 'bg-blue-600 text-white' 
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
                       +
-                    </span>
-                  </label>
-                  <label className="cursor-pointer">
-                    <input
-                      type="radio"
-                      name="operation"
-                      value="subtract"
-                      checked={mixedInputs.operation === 'subtract'}
-                      onChange={(e) => setMixedInputs({...mixedInputs, operation: e.target.value as MixedNumberInputs['operation']})}
-                      className="hidden"
-                    />
-                    <span className={`w-10 h-10 flex items-center justify-center text-xl font-bold rounded-full border-2 
-                      ${mixedInputs.operation === 'subtract' ? 'bg-blue-500 text-white border-blue-500' : 'bg-white text-gray-700 border-gray-300 hover:border-blue-500'}`}>
-                      -
-                    </span>
-                  </label>
-                  <label className="cursor-pointer">
-                    <input
-                      type="radio"
-                      name="operation"
-                      value="multiply"
-                      checked={mixedInputs.operation === 'multiply'}
-                      onChange={(e) => setMixedInputs({...mixedInputs, operation: e.target.value as MixedNumberInputs['operation']})}
-                      className="hidden"
-                    />
-                    <span className={`w-10 h-10 flex items-center justify-center text-xl font-bold rounded-full border-2 
-                      ${mixedInputs.operation === 'multiply' ? 'bg-blue-500 text-white border-blue-500' : 'bg-white text-gray-700 border-gray-300 hover:border-blue-500'}`}>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setMixedInputs({...mixedInputs, operation: 'subtract'})}
+                      className={`px-4 py-2 rounded ${
+                        mixedInputs.operation === 'subtract' 
+                          ? 'bg-blue-600 text-white' 
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      −
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setMixedInputs({...mixedInputs, operation: 'multiply'})}
+                      className={`px-4 py-2 rounded ${
+                        mixedInputs.operation === 'multiply' 
+                          ? 'bg-blue-600 text-white' 
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
                       ×
-                    </span>
-                  </label>
-                  <label className="cursor-pointer">
-                    <input
-                      type="radio"
-                      name="operation"
-                      value="divide"
-                      checked={mixedInputs.operation === 'divide'}
-                      onChange={(e) => setMixedInputs({...mixedInputs, operation: e.target.value as MixedNumberInputs['operation']})}
-                      className="hidden"
-                    />
-                    <span className={`w-10 h-10 flex items-center justify-center text-xl font-bold rounded-full border-2 
-                      ${mixedInputs.operation === 'divide' ? 'bg-blue-500 text-white border-blue-500' : 'bg-white text-gray-700 border-gray-300 hover:border-blue-500'}`}>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setMixedInputs({...mixedInputs, operation: 'divide'})}
+                      className={`px-4 py-2 rounded ${
+                        mixedInputs.operation === 'divide' 
+                          ? 'bg-blue-600 text-white' 
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
                       ÷
-                    </span>
-                  </label>
+                    </button>
+                  </div>
                 </div>
 
                 {/* Second Mixed Number */}
-                <div className="flex items-center gap-2">
-                  <div className="flex flex-col items-center">
-                    <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mb-2 shadow-sm">
-                      Whole
-                    </label>
-                    <input
+                <div className="flex flex-col items-center w-full sm:w-auto">
+                  <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mb-2 shadow-sm">
+                    Second Mixed Number
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <input 
                       type="number"
+                      placeholder="Whole"
                       value={mixedInputs.whole2}
                       onChange={(e) => setMixedInputs({...mixedInputs, whole2: Number(e.target.value)})}
-                      className="w-16 p-2 border rounded text-center"
-                      placeholder="0"
+                      className="w-20 p-2 border rounded text-center"
                     />
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mb-2 shadow-sm">
-                      Numerator
-                    </label>
-                    <input
-                      type="number"
-                      value={mixedInputs.num2}
-                      onChange={(e) => setMixedInputs({...mixedInputs, num2: Number(e.target.value)})}
-                      className="w-16 p-2 border rounded text-center"
-                      placeholder="0"
-                    />
-                    <div className="my-1 border-t border-black w-16"></div>
-                    <input
-                      type="number"
-                      value={mixedInputs.den2}
-                      onChange={(e) => setMixedInputs({...mixedInputs, den2: Number(e.target.value)})}
-                      className="w-16 p-2 border rounded text-center"
-                      placeholder="1"
-                    />
-                    <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mt-2 shadow-sm">
-                      Denominator
-                    </label>
+                    <div className="flex flex-col">
+                      <input 
+                        type="number"
+                        placeholder="Num"
+                        value={mixedInputs.num2}
+                        onChange={(e) => setMixedInputs({...mixedInputs, num2: Number(e.target.value)})}
+                        className="w-20 p-2 border rounded text-center"
+                      />
+                      <div className="my-1 border-t border-black w-full"></div>
+                      <input 
+                        type="number"
+                        placeholder="Den"
+                        value={mixedInputs.den2}
+                        onChange={(e) => setMixedInputs({...mixedInputs, den2: Number(e.target.value)})}
+                        className="w-20 p-2 border rounded text-center"
+                      />
+                    </div>
                   </div>
                 </div>
 
-                {/* Equals Sign */}
-                <div className="text-2xl font-bold">=</div>
-
-                {/* Mixed Number Result */}
-                {mixedResult && (
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <div className="flex items-center gap-2 mb-4">
-                      <span className="text-2xl font-bold text-blue-600">
-                        {mixedResult.whole !== 0 && mixedResult.whole}
-                      </span>
-                      {(mixedResult.num !== 0 || mixedResult.whole === 0) && (
-                        <div className="flex flex-col items-center">
-                          <span className="text-2xl font-bold text-blue-600">{mixedResult.num}</span>
-                          <div className="my-1 border-t border-black w-16"></div>
-                          <span className="text-2xl font-bold text-blue-600">{mixedResult.den}</span>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="space-y-2 text-sm text-gray-600">
-                      <p>
-                        <span className="font-semibold">Decimal:</span>{' '}
-                        <span className="text-green-600 font-bold">
-                          {((mixedResult.whole * mixedResult.den + mixedResult.num) / mixedResult.den).toFixed(3)}
-                        </span>
-                      </p>
-                      <p>
-                        <span className="font-semibold">Improper Fraction:</span>{' '}
-                        <span className="text-purple-600 font-bold">
-                          {mixedResult.whole * mixedResult.den + mixedResult.num}
-                          <span className="inline-flex flex-col items-center mx-1">
-                            <div className="border-t border-black w-4"></div>
-                            <span>{mixedResult.den}</span>
+                {/* Result */}
+                <div className="w-full sm:w-48 p-2 text-center">
+                  {mixedResult && (
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <div className="flex flex-col items-center mb-4">
+                        <p className="font-semibold text-gray-700 mb-2">Mixed Number:</p>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xl font-bold text-blue-600">
+                            {mixedResult.whole}
                           </span>
-                        </span>
-                      </p>
-                      <p>
-                        <span className="font-semibold">Percentage:</span>{' '}
-                        <span className="text-orange-600 font-bold">
-                          {((mixedResult.whole * mixedResult.den + mixedResult.num) / mixedResult.den * 100).toFixed(1)}%
-                        </span>
-                      </p>
+                          {mixedResult.num !== 0 && (
+                            <div className="flex flex-col items-center">
+                              <span className="text-xl font-bold text-blue-600">
+                                {mixedResult.num}
+                              </span>
+                              <div className="my-1 border-t border-black w-8"></div>
+                              <span className="text-xl font-bold text-blue-600">
+                                {mixedResult.den}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2 text-sm text-gray-600">
+                        <p>
+                          <span className="font-semibold">Improper Fraction:</span>{' '}
+                          <span className="text-purple-600 font-bold">
+                            {mixedResult.whole * mixedResult.den + mixedResult.num}/{mixedResult.den}
+                          </span>
+                        </p>
+                        <p>
+                          <span className="font-semibold">Decimal:</span>{' '}
+                          <span className="text-green-600 font-bold">
+                            {((mixedResult.whole * mixedResult.den + mixedResult.num) / mixedResult.den).toFixed(6)}
+                          </span>
+                        </p>
+                        <p>
+                          <span className="font-semibold">Percentage:</span>{' '}
+                          <span className="text-orange-600 font-bold">
+                            {(((mixedResult.whole * mixedResult.den + mixedResult.num) / mixedResult.den) * 100).toFixed(2)}%
+                          </span>
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
 
               <div className="flex justify-center">
                 <button
-                  type="submit"
+                  onClick={handleMixedCalculate}
+                  type="button"
                   className="px-8 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                 >
                   Calculate
                 </button>
               </div>
             </form>
-          </div>
-
-          {/* Mixed Numbers Details Dropdown */}
-          <div className="mt-4">
-            <details className="bg-white rounded-lg shadow-lg">
-              <summary className="p-6 text-lg font-semibold cursor-pointer hover:bg-gray-50">
-                More Details About Mixed Numbers Operations
-              </summary>
-              <div className="px-6 pb-6">
-                <div className="prose max-w-none">
-                  <p>
-                    A mixed number consists of a whole number and a proper fraction. For example, 1¾ is a mixed number 
-                    where 1 is the whole number and ¾ is the fraction part.
-                  </p>
-
-                  {/* Mixed Numbers Formula */}
-                  <h3>Converting Between Mixed Numbers and Improper Fractions</h3>
-                  <Image
-                    src="/images/mixednumbers-formula.webp"
-                    alt="Essential mixed numbers conversion formulas for math students and teachers: Learn step-by-step how to convert mixed numbers (a b/c) to improper fractions ((a×c+b)/c) and back (⌊a÷b⌋ remainder/b). Perfect for algebra, pre-calculus, and standardized test prep #mathematics #fractions #education"
-                    width={800}
-                    height={400}
-                    className="rounded-lg shadow-lg mb-4"
-                    priority
-                  />
-                  <p className="text-sm text-gray-600 mb-6">
-                    Step-by-step formulas for converting between mixed numbers and improper fractions, with clear variable explanations.
-                  </p>
-
-                  {/* Mixed Numbers Example */}
-                  <h3>Example Calculation</h3>
-                  <Image
-                    src="/images/mixednumbers-result.webp"
-                    alt="Interactive mixed numbers calculator showing 2¾ + 1½ = 4¼, with instant conversions to decimal (4.250), improper fraction (17/4), and percentage (425.0%). Ideal for homework help, classroom teaching, and self-study. Features automatic simplification and multiple formats #mathtools #fractioncalculator #education"
-                    width={800}
-                    height={400}
-                    className="rounded-lg shadow-lg mb-4"
-                    priority
-                  />
-                  <p className="text-sm text-gray-600 mb-6">
-                    Example: Adding mixed numbers 2¾ + 1½ = 4¼, demonstrating automatic conversion and multiple result formats.
-                  </p>
-
-                  <h3>How It Works</h3>
-                  <ol className="list-decimal pl-5 space-y-2">
-                    <li>Convert mixed numbers to improper fractions:
-                      <ul className="list-disc pl-5 mt-1">
-                        <li>Multiply whole number by denominator</li>
-                        <li>Add numerator</li>
-                        <li>Keep the same denominator</li>
-                      </ul>
-                    </li>
-                    <li>Perform the selected operation</li>
-                    <li>Convert result back to mixed number:
-                      <ul className="list-disc pl-5 mt-1">
-                        <li>Divide numerator by denominator</li>
-                        <li>Whole number is the quotient</li>
-                        <li>Remainder becomes the new numerator</li>
-                      </ul>
-                    </li>
-                    <li>Simplify the fraction part if needed</li>
-                  </ol>
-
-                  <h3>Conversion Formulas</h3>
-                  <div className="bg-gray-50 p-4 rounded-lg my-4">
-                    <p className="font-semibold mb-2">Mixed to Improper:</p>
-                    <p className="text-gray-700">
-                      For mixed number a b/c:<br />
-                      Improper fraction = (a × c + b)/c
-                    </p>
-                    <p className="font-semibold mt-4 mb-2">Improper to Mixed:</p>
-                    <p className="text-gray-700">
-                      For improper fraction a/b:<br />
-                      Whole number = floor(a ÷ b)<br />
-                      Fraction part = remainder/b
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </details>
           </div>
         </div>
 
@@ -805,10 +712,48 @@ export default function FractionCalculator() {
 
                 {/* Result */}
                 {simplifyResult && (
-                  <div className="flex flex-col items-center">
-                    <span className="text-2xl font-bold text-blue-600">{simplifyResult.num}</span>
-                    <div className="my-1 border-t border-black w-20"></div>
-                    <span className="text-2xl font-bold text-blue-600">{simplifyResult.den}</span>
+                  <div className="w-full sm:w-48 p-2 text-center">
+                    {simplifyResult && (
+                      <div className="bg-gray-50 p-4 rounded-lg">
+                        <div className="flex flex-col items-center mb-4">
+                          <p className="font-semibold text-gray-700 mb-2">Simplified Fraction:</p>
+                          <span className="text-xl font-bold text-blue-600">{simplifyResult.num}</span>
+                          <div className="my-1 border-t border-black w-20"></div>
+                          <span className="text-xl font-bold text-blue-600">{simplifyResult.den}</span>
+                        </div>
+                        
+                        <div className="space-y-2 text-sm text-gray-600">
+                          <p>
+                            <span className="font-semibold">Mixed Number:</span>{' '}
+                            <span className="text-purple-600 font-bold">
+                              {Math.floor(Math.abs(simplifyResult.num) / simplifyResult.den)}
+                              {simplifyResult.num % simplifyResult.den !== 0 && (
+                                <>
+                                  {' '}
+                                  <span className="inline-flex flex-col items-center mx-1">
+                                    <span>{Math.abs(simplifyResult.num) % simplifyResult.den}</span>
+                                    <div className="border-t border-black w-4"></div>
+                                    <span>{simplifyResult.den}</span>
+                                  </span>
+                                </>
+                              )}
+                            </span>
+                          </p>
+                          <p>
+                            <span className="font-semibold">Decimal:</span>{' '}
+                            <span className="text-green-600 font-bold">
+                              {(simplifyResult.num / simplifyResult.den).toFixed(6)}
+                            </span>
+                          </p>
+                          <p>
+                            <span className="font-semibold">Percentage:</span>{' '}
+                            <span className="text-orange-600 font-bold">
+                              {((simplifyResult.num / simplifyResult.den) * 100).toFixed(2)}%
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -896,175 +841,118 @@ export default function FractionCalculator() {
         {/* Decimal to Fraction Calculator */}
         <div className="max-w-2xl mx-auto mt-12">
           <h2 className="text-2xl font-bold mb-4">Decimal to Fraction Calculator</h2>
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <div className="calculator-grid">
-              <div className="flex items-center justify-center gap-4">
-                <div className="flex flex-col items-center">
-                  <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mb-2 shadow-sm">
-                    Decimal Number
-                  </label>
-                  <input 
-                    type="number" 
-                    placeholder="Enter decimal"
-                    value={decimalInput}
-                    onChange={(e) => setDecimalInput(e.target.value)}
-                    className="w-32 p-2 border rounded text-center"
-                    step="any"
-                  />
-                </div>
-
-                {/* Equals Sign */}
-                <div className="text-2xl font-bold">=</div>
-
-                {/* Result - Only show when fractionResult exists */}
-                <div className="w-48 p-2 text-center min-h-[60px]">
-                  {fractionResult && (
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <div className="flex flex-col items-center mb-4">
-                        <span className="text-2xl font-bold text-blue-600">{fractionResult.numerator}</span>
-                        <div className="my-1 border-t border-black w-20"></div>
-                        <span className="text-2xl font-bold text-blue-600">{fractionResult.denominator}</span>
-                      </div>
-                      
-                      <div className="space-y-2 text-sm text-gray-600">
-                        <p>
-                          <span className="font-semibold">Decimal:</span>{' '}
-                          <span className="text-green-600 font-bold">
-                            {(fractionResult.numerator / fractionResult.denominator).toFixed(3)}
-                          </span>
-                        </p>
-                        <p>
-                          <span className="font-semibold">Mixed Number:</span>{' '}
-                          <span className="text-purple-600 font-bold">
-                            {Math.floor(fractionResult.numerator / fractionResult.denominator)}
-                            {fractionResult.numerator % fractionResult.denominator !== 0 && (
-                              <>
-                                {' '}
-                                <span className="inline-flex flex-col items-center mx-1">
-                                  <span>{fractionResult.numerator % fractionResult.denominator}</span>
-                                  <div className="border-t border-black w-4"></div>
-                                  <span>{fractionResult.denominator}</span>
-                                </span>
-                              </>
-                            )}
-                          </span>
-                        </p>
-                        <p>
-                          <span className="font-semibold">Percentage:</span>{' '}
-                          <span className="text-orange-600 font-bold">
-                            {((fractionResult.numerator / fractionResult.denominator) * 100).toFixed(1)}%
-                          </span>
-                        </p>
-                      </div>
-                    </div>
-                  )}
-                </div>
+          <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              {/* Input Section */}
+              <div className="flex flex-col items-center w-full sm:w-auto">
+                <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mb-2 shadow-sm">
+                  Decimal Number
+                </label>
+                <input 
+                  type="number"
+                  step="any"
+                  placeholder="Enter decimal"
+                  value={decimalInput}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === '' || /^-?\d*\.?\d*$/.test(value)) {
+                      setDecimalInput(value)
+                    }
+                  }}
+                  className="w-32 p-2 border rounded text-center"
+                />
               </div>
 
-              <div className="flex justify-center mt-6">
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    if (!decimalInput) {
-                      setFractionResult(null);
-                      return;
-                    }
+              {/* Equals Sign */}
+              <div className="text-2xl font-bold">=</div>
 
-                    const decimal = parseFloat(decimalInput);
-                    if (isNaN(decimal)) {
-                      setFractionResult(null);
-                      return;
-                    }
-
-                    const precision = 1000000;
-                    let numerator = decimal * precision;
-                    let denominator = precision;
+              {/* Result Section */}
+              <div className="w-full sm:w-48 p-2 text-center">
+                {fractionResult && (
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <div className="flex flex-col items-center mb-4">
+                      <span className="text-2xl font-bold text-blue-600">{fractionResult.numerator}</span>
+                      <div className="my-1 border-t border-black w-20"></div>
+                      <span className="text-2xl font-bold text-blue-600">{fractionResult.denominator}</span>
+                    </div>
                     
-                    const gcd = (a: number, b: number): number => {
-                      a = Math.abs(a);
-                      b = Math.abs(b);
-                      return b ? gcd(b, a % b) : a;
-                    };
-                    
-                    const divisor = gcd(numerator, denominator);
-                    
-                    numerator = numerator / divisor;
-                    denominator = denominator / divisor;
-                    
-                    setFractionResult({
-                      numerator: Math.round(numerator),
-                      denominator: Math.round(denominator)
-                    });
-                  }}
-                  type="button"
-                  className="px-8 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                >
-                  Calculate
-                </button>
+                    <div className="space-y-2 text-sm text-gray-600">
+                      <p>
+                        <span className="font-semibold">Decimal:</span>{' '}
+                        <span className="text-green-600 font-bold">
+                          {(fractionResult.numerator / fractionResult.denominator).toFixed(3)}
+                        </span>
+                      </p>
+                      <p>
+                        <span className="font-semibold">Mixed Number:</span>{' '}
+                        <span className="text-purple-600 font-bold">
+                          {Math.floor(fractionResult.numerator / fractionResult.denominator)}
+                          {fractionResult.numerator % fractionResult.denominator !== 0 && (
+                            <>
+                              {' '}
+                              <span className="inline-flex flex-col items-center mx-1">
+                                <span>{fractionResult.numerator % fractionResult.denominator}</span>
+                                <div className="border-t border-black w-4"></div>
+                                <span>{fractionResult.denominator}</span>
+                              </span>
+                            </>
+                          )}
+                        </span>
+                      </p>
+                      <p>
+                        <span className="font-semibold">Percentage:</span>{' '}
+                        <span className="text-orange-600 font-bold">
+                          {((fractionResult.numerator / fractionResult.denominator) * 100).toFixed(1)}%
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
-          </div>
 
-          {/* Decimal to Fraction Details Dropdown */}
-          <div className="mt-4">
-            <details className="bg-white rounded-lg shadow-lg">
-              <summary className="p-6 text-lg font-semibold cursor-pointer hover:bg-gray-50">
-                More Details About Decimal to Fraction Conversion
-              </summary>
-              <div className="px-6 pb-6">
-                <div className="prose max-w-none">
-                  <p>
-                    This calculator converts any decimal number into its equivalent fraction in simplified form. 
-                    It handles both terminating and repeating decimals.
-                  </p>
+            {/* Calculate Button */}
+            <div className="flex justify-center mt-6">
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (!decimalInput) {
+                    setFractionResult(null);
+                    return;
+                  }
 
-                  <h3>Example Calculation</h3>
-                  <Image
-                    src="/images/decimalcalculator.webp"
-                    alt="Decimal to fraction calculator example showing 0.75 converted to 3/4, with instant conversion to mixed number and percentage. Perfect for learning decimal to fraction conversions and understanding equivalent representations of numbers."
-                    width={800}
-                    height={400}
-                    className="rounded-lg shadow-lg mb-4"
-                    priority
-                  />
-                  <p className="text-sm text-gray-600 mb-6">
-                    Example: Converting decimal 0.75 to fraction 3/4, showing simplified result with mixed number and percentage equivalents.
-                  </p>
+                  const decimal = parseFloat(decimalInput);
+                  if (isNaN(decimal)) {
+                    setFractionResult(null);
+                    return;
+                  }
 
-                  <h3>Conversion Formulas</h3>
-                  <Image
-                    src="/images/decimal-formula.webp"
-                    alt="Essential decimal to fraction conversion formulas: Learn how to convert terminating decimals (0.75 = 75/100 = 3/4) and repeating decimals (0.333... = 1/3) using step-by-step methods. Perfect for algebra, pre-calculus, and standardized test prep."
-                    width={800}
-                    height={200}
-                    className="rounded-lg shadow-md my-4"
-                    priority
-                  />
-                  <p className="text-sm text-gray-600 mb-6">
-                    Step-by-step formulas for converting decimals to fractions, with examples of both terminating and repeating decimals.
-                  </p>
-
-                  <h3>How It Works</h3>
-                  <ol className="list-decimal pl-5 space-y-2">
-                    <li>Enter any decimal number (e.g., 0.75)</li>
-                    <li>The calculator converts it to a fraction (e.g., 3/4)</li>
-                    <li>The result is automatically simplified</li>
-                    <li>View the result as a fraction, mixed number, and percentage</li>
-                  </ol>
-
-                  <div className="bg-gray-50 p-4 rounded-lg my-4">
-                    <p className="font-semibold mb-2">Common Decimal to Fraction Examples:</p>
-                    <ul className="list-disc pl-5 space-y-1">
-                      <li>0.5 = 1/2</li>
-                      <li>0.25 = 1/4</li>
-                      <li>0.75 = 3/4</li>
-                      <li>0.125 = 1/8</li>
-                      <li>0.333... = 1/3</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </details>
+                  const precision = 1000000;
+                  let numerator = decimal * precision;
+                  let denominator = precision;
+                  
+                  const gcd = (a: number, b: number): number => {
+                    a = Math.abs(a);
+                    b = Math.abs(b);
+                    return b ? gcd(b, a % b) : a;
+                  };
+                  
+                  const divisor = gcd(numerator, denominator);
+                  
+                  numerator = numerator / divisor;
+                  denominator = denominator / divisor;
+                  
+                  setFractionResult({
+                    numerator: Math.round(numerator),
+                    denominator: Math.round(denominator)
+                  });
+                }}
+                type="button"
+                className="px-8 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              >
+                Calculate
+              </button>
+            </div>
           </div>
         </div>
 
@@ -1076,14 +964,22 @@ export default function FractionCalculator() {
               <div className="flex items-center justify-center gap-4">
                 {/* Fraction Input */}
                 <div className="flex flex-col items-center">
+                  <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mb-2 shadow-sm">
+                    Numerator
+                  </label>
                   <input 
-                    type="number" 
+                    type="number"
                     placeholder="Numerator"
                     value={fractionInput.numerator}
-                    onChange={(e) => setFractionInput({
-                      ...fractionInput,
-                      numerator: Number(e.target.value)
-                    })}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value === '' || /^-?\d*$/.test(value)) {
+                        setFractionInput({
+                          ...fractionInput,
+                          numerator: value === '' ? 0 : parseInt(value)
+                        })
+                      }
+                    }}
                     className="w-32 p-2 border rounded text-center"
                   />
                   <div className="my-1 border-t border-black w-20"></div>
@@ -1214,11 +1110,11 @@ export default function FractionCalculator() {
         {/* Big Number Fraction Calculator */}
         <div className="max-w-2xl mx-auto mt-12">
           <h2 className="text-2xl font-bold mb-4">Big Number Fraction Calculator</h2>
-          <div className="bg-white rounded-lg shadow-lg p-6">
+          <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6">
             <form className="space-y-6">
-              <div className="flex items-center justify-center gap-8">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 {/* First Fraction */}
-                <div className="flex flex-col items-center">
+                <div className="flex flex-col items-center w-full sm:w-auto">
                   <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mb-2 shadow-sm">
                     First Fraction
                   </label>
@@ -1246,11 +1142,11 @@ export default function FractionCalculator() {
                 </div>
 
                 {/* Operation */}
-                <div className="flex flex-col items-center">
+                <div className="flex flex-col items-center w-full sm:w-auto">
                   <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mb-2 shadow-sm">
                     Operation
                   </label>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-4 sm:grid-cols-2 gap-2 w-full">
                     <button
                       type="button"
                       onClick={() => setBigFractionInput({ ...bigFractionInput, operation: 'add' })}
@@ -1299,7 +1195,7 @@ export default function FractionCalculator() {
                 </div>
 
                 {/* Second Fraction */}
-                <div className="flex flex-col items-center">
+                <div className="flex flex-col items-center w-full sm:w-auto">
                   <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mb-2 shadow-sm">
                     Second Fraction
                   </label>
@@ -1330,7 +1226,7 @@ export default function FractionCalculator() {
                 <div className="text-2xl font-bold">=</div>
 
                 {/* Result */}
-                <div className="w-48 p-2 text-center min-h-[60px]">
+                <div className="w-full sm:w-48 p-2 text-center">
                   {bigFractionResult && (
                     <div className="bg-gray-50 p-4 rounded-lg">
                       <div className="flex flex-col items-center mb-4">
