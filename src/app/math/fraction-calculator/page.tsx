@@ -64,6 +64,9 @@ export default function FractionCalculator() {
 
   const [simplifyResult, setSimplifyResult] = useState<{num: number, den: number} | null>(null)
 
+  const [decimalInput, setDecimalInput] = useState('')
+  const [fractionResult, setFractionResult] = useState<{ numerator: number, denominator: number } | null>(null)
+
   const handleCalculate = (e: FormEvent) => {
     e.preventDefault()
     let num: number, den: number
@@ -787,6 +790,181 @@ export default function FractionCalculator() {
                       <li>24 ÷ 12 = 2 (new numerator)</li>
                       <li>36 ÷ 12 = 3 (new denominator)</li>
                       <li>Simplified fraction: 2/3</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </details>
+          </div>
+        </div>
+
+        {/* Decimal to Fraction Calculator */}
+        <div className="max-w-2xl mx-auto mt-12">
+          <h2 className="text-2xl font-bold mb-4">Decimal to Fraction Calculator</h2>
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="calculator-grid">
+              <div className="flex items-center justify-center gap-4">
+                <div className="flex flex-col items-center">
+                  <label className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium mb-2 shadow-sm">
+                    Decimal Number
+                  </label>
+                  <input 
+                    type="number" 
+                    placeholder="Enter decimal"
+                    value={decimalInput}
+                    onChange={(e) => setDecimalInput(e.target.value)}
+                    className="w-32 p-2 border rounded text-center"
+                    step="any"
+                  />
+                </div>
+
+                {/* Equals Sign */}
+                <div className="text-2xl font-bold">=</div>
+
+                {/* Result - Only show when fractionResult exists */}
+                <div className="w-48 p-2 text-center min-h-[60px]">
+                  {fractionResult && (
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <div className="flex flex-col items-center mb-4">
+                        <span className="text-2xl font-bold text-blue-600">{fractionResult.numerator}</span>
+                        <div className="my-1 border-t border-black w-20"></div>
+                        <span className="text-2xl font-bold text-blue-600">{fractionResult.denominator}</span>
+                      </div>
+                      
+                      <div className="space-y-2 text-sm text-gray-600">
+                        <p>
+                          <span className="font-semibold">Decimal:</span>{' '}
+                          <span className="text-green-600 font-bold">
+                            {(fractionResult.numerator / fractionResult.denominator).toFixed(3)}
+                          </span>
+                        </p>
+                        <p>
+                          <span className="font-semibold">Mixed Number:</span>{' '}
+                          <span className="text-purple-600 font-bold">
+                            {Math.floor(fractionResult.numerator / fractionResult.denominator)}
+                            {fractionResult.numerator % fractionResult.denominator !== 0 && (
+                              <>
+                                {' '}
+                                <span className="inline-flex flex-col items-center mx-1">
+                                  <span>{fractionResult.numerator % fractionResult.denominator}</span>
+                                  <div className="border-t border-black w-4"></div>
+                                  <span>{fractionResult.denominator}</span>
+                                </span>
+                              </>
+                            )}
+                          </span>
+                        </p>
+                        <p>
+                          <span className="font-semibold">Percentage:</span>{' '}
+                          <span className="text-orange-600 font-bold">
+                            {((fractionResult.numerator / fractionResult.denominator) * 100).toFixed(1)}%
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex justify-center mt-6">
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (!decimalInput) {
+                      setFractionResult(null);
+                      return;
+                    }
+
+                    const decimal = parseFloat(decimalInput);
+                    if (isNaN(decimal)) {
+                      setFractionResult(null);
+                      return;
+                    }
+
+                    const precision = 1000000;
+                    let numerator = decimal * precision;
+                    let denominator = precision;
+                    
+                    const gcd = (a: number, b: number): number => {
+                      a = Math.abs(a);
+                      b = Math.abs(b);
+                      return b ? gcd(b, a % b) : a;
+                    };
+                    
+                    const divisor = gcd(numerator, denominator);
+                    
+                    numerator = numerator / divisor;
+                    denominator = denominator / divisor;
+                    
+                    setFractionResult({
+                      numerator: Math.round(numerator),
+                      denominator: Math.round(denominator)
+                    });
+                  }}
+                  type="button"
+                  className="px-8 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
+                  Calculate
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Decimal to Fraction Details Dropdown */}
+          <div className="mt-4">
+            <details className="bg-white rounded-lg shadow-lg">
+              <summary className="p-6 text-lg font-semibold cursor-pointer hover:bg-gray-50">
+                More Details About Decimal to Fraction Conversion
+              </summary>
+              <div className="px-6 pb-6">
+                <div className="prose max-w-none">
+                  <p>
+                    This calculator converts any decimal number into its equivalent fraction in simplified form. 
+                    It handles both terminating and repeating decimals.
+                  </p>
+
+                  <h3>Example Calculation</h3>
+                  <Image
+                    src="/images/decimalcalculator.webp"
+                    alt="Decimal to fraction calculator example showing 0.75 converted to 3/4, with instant conversion to mixed number and percentage. Perfect for learning decimal to fraction conversions and understanding equivalent representations of numbers."
+                    width={800}
+                    height={400}
+                    className="rounded-lg shadow-lg mb-4"
+                    priority
+                  />
+                  <p className="text-sm text-gray-600 mb-6">
+                    Example: Converting decimal 0.75 to fraction 3/4, showing simplified result with mixed number and percentage equivalents.
+                  </p>
+
+                  <h3>Conversion Formulas</h3>
+                  <Image
+                    src="/images/decimal-formula.webp"
+                    alt="Essential decimal to fraction conversion formulas: Learn how to convert terminating decimals (0.75 = 75/100 = 3/4) and repeating decimals (0.333... = 1/3) using step-by-step methods. Perfect for algebra, pre-calculus, and standardized test prep."
+                    width={800}
+                    height={200}
+                    className="rounded-lg shadow-md my-4"
+                    priority
+                  />
+                  <p className="text-sm text-gray-600 mb-6">
+                    Step-by-step formulas for converting decimals to fractions, with examples of both terminating and repeating decimals.
+                  </p>
+
+                  <h3>How It Works</h3>
+                  <ol className="list-decimal pl-5 space-y-2">
+                    <li>Enter any decimal number (e.g., 0.75)</li>
+                    <li>The calculator converts it to a fraction (e.g., 3/4)</li>
+                    <li>The result is automatically simplified</li>
+                    <li>View the result as a fraction, mixed number, and percentage</li>
+                  </ol>
+
+                  <div className="bg-gray-50 p-4 rounded-lg my-4">
+                    <p className="font-semibold mb-2">Common Decimal to Fraction Examples:</p>
+                    <ul className="list-disc pl-5 space-y-1">
+                      <li>0.5 = 1/2</li>
+                      <li>0.25 = 1/4</li>
+                      <li>0.75 = 3/4</li>
+                      <li>0.125 = 1/8</li>
+                      <li>0.333... = 1/3</li>
                     </ul>
                   </div>
                 </div>
