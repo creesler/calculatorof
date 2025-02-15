@@ -36,10 +36,9 @@ next-env.d.ts
 public/sitemap.xml
 public/icons/
 
-NEXT_PUBLIC_GA_ID=your-google-analytics-id
+# Certificates
+/certificates
 
-# Environment Variables
-.env.local
-.env.*.local
+NEXT_PUBLIC_GA_ID=your-google-analytics-id
 
 .env 

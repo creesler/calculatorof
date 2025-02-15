@@ -1,10 +1,11 @@
+'use client'
+
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { NextSeo } from 'next-seo'
 import Link from 'next/link'
 import Navigation from '@/components/Navigation'
-import ServiceWorkerRegistration from '@/components/ServiceWorkerRegistration'
-import { GA_MEASUREMENT_ID } from '@/lib/constants'
+import { useEffect } from 'react'
 
 // Separate viewport configuration
 export const viewport: Viewport = {
@@ -61,34 +62,25 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js')
+        .then((registration) => console.log('SW registered:', registration.scope))
+        .catch((error) => console.log('SW registration failed:', error));
+    }
+  }, [])
+
   return (
     <html lang="en">
       <head>
-        <link rel="manifest" href="/manifest.json" crossOrigin="use-credentials" />
+        <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#3b82f6" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Calculator Suite" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
-        
-        {/* Google Analytics */}
-        <script
-          async
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${GA_MEASUREMENT_ID}');
-            `,
-          }}
-        />
       </head>
       <body>
-        <ServiceWorkerRegistration />
         <Navigation />
         {children}
 

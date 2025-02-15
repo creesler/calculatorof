@@ -1,0 +1,1 @@
+export const GA_MEASUREMENT_ID = 'G-9QG9RL9YQQ' // Replace with your actual GA4 ID from Google Analytics 

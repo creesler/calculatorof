@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import { FaArrowUp, FaHome, FaAndroid, FaApple, FaWindows } from 'react-icons/fa'
 import { useState, useEffect } from 'react'
-import { trackEvent } from '@/lib/analytics'
 
 export default function FloatingButtons() {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
@@ -13,30 +12,25 @@ export default function FloatingButtons() {
   useEffect(() => {
     // Check platform
     const userAgent = navigator.userAgent;
-    console.log('Current userAgent:', userAgent);
     
     if (/iPad|iPhone|iPod/.test(userAgent) && 
         /WebKit/.test(userAgent) && 
         !/(CriOS|FxiOS|OPiOS|mercury)/.test(userAgent)) {
-      console.log('Platform detected: iOS Safari');
+      console.log('Platform: iOS Safari');
       setPlatform('ios');
     } else if (/Android/.test(userAgent)) {
-      console.log('Platform detected: Android');
+      console.log('Platform: Android');
       setPlatform('android');
     } else if (/Windows/.test(userAgent)) {
-      console.log('Platform detected: Windows');
+      console.log('Platform: Windows');
       setPlatform('windows');
-      // Show prompt immediately for Windows
-      setShowInstallPrompt(true);
     }
 
-    // Listen for install prompt
+    // Listen for install prompt (works on Android and Windows)
     window.addEventListener('beforeinstallprompt', (e) => {
       console.log('Install prompt event fired');
       e.preventDefault();
       setDeferredPrompt(e);
-      // Show prompt immediately when it's available
-      setShowInstallPrompt(true);
     });
   }, []);
 
@@ -45,30 +39,17 @@ export default function FloatingButtons() {
   }
 
   const handleInstall = async () => {
-    console.log('Handle install clicked');
     if (platform === 'ios') {
       alert('Tap the share button and then "Add to Home Screen" to install')
     } else if (deferredPrompt) {
-      try {
-        await deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        console.log('Install prompt outcome:', outcome);
-        if (outcome === 'accepted') {
-          setDeferredPrompt(null);
-        }
-      } catch (error) {
-        console.error('Error showing install prompt:', error);
+      deferredPrompt.prompt()
+      const { outcome } = await deferredPrompt.userChoice
+      if (outcome === 'accepted') {
+        setDeferredPrompt(null)
       }
     }
-    setShowInstallPrompt(false);
+    setShowInstallPrompt(false)
   }
-
-  const handleInstallClick = () => {
-    console.log('Install icon clicked');
-    console.log('Current platform:', platform);
-    console.log('Has deferred prompt:', !!deferredPrompt);
-    setShowInstallPrompt(true);
-  };
 
   const getInstallIcon = () => {
     switch (platform) {
@@ -83,49 +64,11 @@ export default function FloatingButtons() {
     }
   }
 
-  const trackInstall = async (
-    platform: 'windows' | 'ios' | 'android',
-    status: 'attempted' | 'successful' | 'failed',
-    error?: string
-  ) => {
-    try {
-      // Get device info first
-      const deviceInfo = {
-        screenSize: `${window.innerWidth}x${window.innerHeight}`,
-        language: navigator.language,
-        platform: navigator.platform,
-        vendor: navigator.vendor
-      };
-
-      // Get session info
-      const sessionStart = sessionStorage.getItem('sessionStart');
-      const sessionDuration = sessionStart 
-        ? Math.floor((Date.now() - parseInt(sessionStart)) / 1000)
-        : 0;
-
-      const visits = parseInt(localStorage.getItem('visitCount') || '0');
-
-      // Track in GA4
-      trackEvent('app_installation', {
-        platform,
-        status,
-        error,
-        device_info: deviceInfo,
-        session_duration: sessionDuration,
-        previous_visits: visits
-      });
-    } catch (error) {
-      console.error('Error tracking installation:', error);
-    }
-  };
-
   return (
     <>
-      {/* Install Prompt */}
+      {/* Install Prompt at Top Left */}
       {platform && (platform === 'ios' || deferredPrompt) && showInstallPrompt && (
-        <div 
-          className="fixed top-4 left-4 right-4 bg-white p-4 rounded-lg shadow-lg z-50 md:left-auto md:right-4 md:w-96 border border-gray-200 slide-in"
-        >
+        <div className="fixed top-4 left-4 right-4 bg-white p-4 rounded-lg shadow-lg z-50 md:left-auto md:right-4 md:w-96 border border-gray-200">
           {/* Close button */}
           <button
             onClick={() => setShowInstallPrompt(false)}
@@ -146,7 +89,7 @@ export default function FloatingButtons() {
             </div>
             <button
               onClick={handleInstall}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors ml-4"
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
             >
               Install
             </button>
@@ -175,7 +118,7 @@ export default function FloatingButtons() {
         {/* Install Icon Button */}
         {platform && (platform === 'ios' || deferredPrompt) && (
           <button
-            onClick={handleInstallClick}
+            onClick={() => setShowInstallPrompt(true)}
             className="bg-purple-600 text-white p-3 rounded-full shadow-lg hover:bg-purple-700 transition-colors"
             aria-label="Install app"
           >

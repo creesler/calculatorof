@@ -38,8 +38,4 @@ public/icons/
 
 NEXT_PUBLIC_GA_ID=your-google-analytics-id
 
-# Environment Variables
-.env.local
-.env.*.local
-
 .env 

@@ -89,35 +89,23 @@ export default function FloatingButtons() {
     error?: string
   ) => {
     try {
-      // Get device info first
-      const deviceInfo = {
-        screenSize: `${window.innerWidth}x${window.innerHeight}`,
-        language: navigator.language,
-        platform: navigator.platform,
-        vendor: navigator.vendor
-      };
-
-      // Get session info
-      const sessionStart = sessionStorage.getItem('sessionStart');
-      const sessionDuration = sessionStart 
-        ? Math.floor((Date.now() - parseInt(sessionStart)) / 1000)
-        : 0;
-
-      const visits = parseInt(localStorage.getItem('visitCount') || '0');
+      // ... existing device info collection ...
 
       // Track in GA4
       trackEvent('app_installation', {
         platform,
         status,
         error,
-        device_info: deviceInfo,
-        session_duration: sessionDuration,
-        previous_visits: visits
-      });
+        deviceInfo,
+        sessionDuration,
+        previousVisits: visits
+      })
+
+      // ... rest of the tracking code ...
     } catch (error) {
-      console.error('Error tracking installation:', error);
+      console.error('Error tracking installation:', error)
     }
-  };
+  }
 
   return (
     <>

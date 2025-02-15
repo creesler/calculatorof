@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import { FaArrowUp, FaHome, FaAndroid, FaApple, FaWindows } from 'react-icons/fa'
 import { useState, useEffect } from 'react'
-import { trackEvent } from '@/lib/analytics'
 
 export default function FloatingButtons() {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
@@ -83,49 +82,11 @@ export default function FloatingButtons() {
     }
   }
 
-  const trackInstall = async (
-    platform: 'windows' | 'ios' | 'android',
-    status: 'attempted' | 'successful' | 'failed',
-    error?: string
-  ) => {
-    try {
-      // Get device info first
-      const deviceInfo = {
-        screenSize: `${window.innerWidth}x${window.innerHeight}`,
-        language: navigator.language,
-        platform: navigator.platform,
-        vendor: navigator.vendor
-      };
-
-      // Get session info
-      const sessionStart = sessionStorage.getItem('sessionStart');
-      const sessionDuration = sessionStart 
-        ? Math.floor((Date.now() - parseInt(sessionStart)) / 1000)
-        : 0;
-
-      const visits = parseInt(localStorage.getItem('visitCount') || '0');
-
-      // Track in GA4
-      trackEvent('app_installation', {
-        platform,
-        status,
-        error,
-        device_info: deviceInfo,
-        session_duration: sessionDuration,
-        previous_visits: visits
-      });
-    } catch (error) {
-      console.error('Error tracking installation:', error);
-    }
-  };
-
   return (
     <>
       {/* Install Prompt */}
       {platform && (platform === 'ios' || deferredPrompt) && showInstallPrompt && (
-        <div 
-          className="fixed top-4 left-4 right-4 bg-white p-4 rounded-lg shadow-lg z-50 md:left-auto md:right-4 md:w-96 border border-gray-200 slide-in"
-        >
+        <div className="fixed bottom-10 left-4 right-4 bg-white p-4 rounded-lg shadow-lg z-50 md:left-auto md:right-4 md:w-96 border border-gray-200">
           {/* Close button */}
           <button
             onClick={() => setShowInstallPrompt(false)}

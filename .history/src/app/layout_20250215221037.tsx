@@ -4,7 +4,6 @@ import { NextSeo } from 'next-seo'
 import Link from 'next/link'
 import Navigation from '@/components/Navigation'
 import ServiceWorkerRegistration from '@/components/ServiceWorkerRegistration'
-import { GA_MEASUREMENT_ID } from '@/lib/constants'
 
 // Separate viewport configuration
 export const viewport: Viewport = {
