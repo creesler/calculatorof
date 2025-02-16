@@ -17,11 +17,15 @@ const isStaticAsset = (url) => {
          url.includes('/images/');
 };
 
-// Helper function to normalize URL paths
-const normalizeUrl = (url) => {
-  // Remove origin if present
-  const urlObj = new URL(url, self.location.origin);
-  return urlObj.pathname;
+// Helper function to check if URL is valid for caching
+const isValidCacheRequest = (url) => {
+  const validProtocols = ['http:', 'https:'];
+  try {
+    const urlObj = new URL(url);
+    return validProtocols.includes(urlObj.protocol);
+  } catch {
+    return false;
+  }
 };
 
 self.addEventListener('install', (event) => {
@@ -32,26 +36,33 @@ self.addEventListener('install', (event) => {
       .then((cache) => {
         console.log('Cache opened, adding static resources');
         // Add all URLs to cache
-        return Promise.all(
-          urlsToCache.map(url => {
-            return fetch(url)
-              .then(response => {
-                if (!response.ok) {
-                  throw new Error(`Failed to fetch ${url}: ${response.status}`);
-                }
-                return cache.put(url, response);
-              })
-              .catch(error => {
-                console.error(`Failed to cache ${url}:`, error);
-                // Continue with other resources even if one fails
-                return Promise.resolve();
-              });
-          })
-        );
+        const cachePromises = urlsToCache.map(url => {
+          // Ensure URL is absolute
+          const absoluteUrl = new URL(url, self.location.origin).href;
+          
+          if (!isValidCacheRequest(absoluteUrl)) {
+            console.log('Skipping invalid cache URL:', url);
+            return Promise.resolve();
+          }
+          
+          return fetch(absoluteUrl)
+            .then(response => {
+              if (!response.ok) {
+                throw new Error(`Failed to fetch ${url}: ${response.status}`);
+              }
+              console.log('Successfully cached:', url);
+              return cache.put(url, response);
+            })
+            .catch(error => {
+              console.error(`Failed to cache ${url}:`, error);
+              return Promise.resolve();
+            });
+        });
+        
+        return Promise.all(cachePromises);
       })
       .catch(error => {
         console.error('Cache initialization failed:', error);
-        // Continue with installation even if caching fails
         return Promise.resolve();
       })
   );
@@ -81,20 +92,28 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+  // Only handle GET requests
+  if (event.request.method !== 'GET') return;
+  
+  // Only handle valid URLs
+  if (!isValidCacheRequest(event.request.url)) return;
+  
   const url = new URL(event.request.url);
-  const pathname = normalizeUrl(url.pathname);
+  
+  // Only handle requests from our origin or static assets
+  if (url.origin !== self.location.origin && !isStaticAsset(url.pathname)) return;
   
   // Use cache-first for static assets
-  if (isStaticAsset(pathname)) {
+  if (isStaticAsset(url.pathname)) {
     event.respondWith(
       caches.match(event.request)
         .then((response) => {
           if (response) {
-            console.log('Serving from cache:', pathname);
+            console.log('Serving from cache:', url.pathname);
             return response;
           }
           
-          console.log('Fetching from network:', pathname);
+          console.log('Fetching from network:', url.pathname);
           return fetch(event.request)
             .then((response) => {
               if (!response || response.status !== 200) {
@@ -106,8 +125,13 @@ self.addEventListener('fetch', (event) => {
               
               caches.open(CACHE_NAME)
                 .then((cache) => {
-                  console.log('Caching new resource:', pathname);
-                  cache.put(event.request, responseToCache);
+                  if (isValidCacheRequest(event.request.url)) {
+                    console.log('Caching new resource:', url.pathname);
+                    cache.put(event.request, responseToCache)
+                      .catch(error => {
+                        console.error('Failed to cache:', error);
+                      });
+                  }
                 });
                 
               return response;
