@@ -27,14 +27,21 @@ export default function PWAInstallPrompt() {
 
     const handler = (e: Event) => {
       e.preventDefault()
+      console.log('Captured beforeinstallprompt event')
+      // Store the event for later use
       setDeferredPrompt(e)
-      setShowInstallButton(true)
+      // Show install button for Android
+      if (platform === 'android') {
+        console.log('Android platform detected, showing install button')
+        setShowInstallButton(true)
+      }
     }
 
     window.addEventListener('beforeinstallprompt', handler)
     
     // For iOS Safari
     if (platform === 'ios') {
+      console.log('iOS platform detected, showing install button')
       setShowInstallButton(true)
     }
 
@@ -52,17 +59,40 @@ export default function PWAInstallPrompt() {
       return
     }
 
-    if (!deferredPrompt) return
+    if (!deferredPrompt) {
+      console.log('No deferred prompt available')
+      if (platform === 'android') {
+        alert('Please try refreshing the page if the install prompt does not appear')
+      }
+      return
+    }
 
     try {
-      deferredPrompt.prompt()
+      console.log('Triggering install prompt')
+      await deferredPrompt.prompt()
+      
+      console.log('Awaiting user choice')
       const { outcome } = await deferredPrompt.userChoice
+      
+      console.log('Installation outcome:', outcome)
       if (outcome === 'accepted') {
         setShowInstallButton(false)
         setDeferredPrompt(null)
+        
+        // Track successful installation
+        try {
+          await fetch('/api/track-install', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ platform })
+          })
+        } catch (error) {
+          console.error('Failed to track installation:', error)
+        }
       }
     } catch (err) {
       console.error('Error installing PWA:', err)
+      alert('There was an error installing the app. Please try again.')
     }
   }
 
