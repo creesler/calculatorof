@@ -5,8 +5,8 @@ const OFFLINE_URL = '/offline.html';
 const urlsToCache = [
   '/',
   '/manifest.json',
-  'icons/icon-192x192.png',
-  'icons/icon-512x512.png',
+  '/icons/icon-192x192.png',
+  '/icons/icon-512x512.png',
   OFFLINE_URL
 ];
 
