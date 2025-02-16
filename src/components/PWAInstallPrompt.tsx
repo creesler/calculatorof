@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { FaDownload, FaTimes, FaWindows, FaApple, FaAndroid } from 'react-icons/fa'
 
 type Platform = 'windows' | 'ios' | 'android'
@@ -10,21 +10,40 @@ export default function PWAInstallPrompt() {
   const [showInstallButton, setShowInstallButton] = useState(false)
   const [platform, setPlatform] = useState<Platform | null>(null)
 
+  // Detect platform once on mount
   useEffect(() => {
-    console.log('PWAInstallPrompt mounted')
-    
-    // Detect platform
-    const userAgent = navigator.userAgent.toLowerCase()
-    console.log('User Agent:', userAgent)
-    
-    if (/windows/.test(userAgent)) {
-      setPlatform('windows')
-    } else if (/ipad|iphone|ipod/.test(userAgent)) {
-      setPlatform('ios')
-    } else if (/android/.test(userAgent)) {
-      console.log('Android device detected')
-      setPlatform('android')
+    const detectPlatform = () => {
+      const userAgent = navigator.userAgent.toLowerCase()
+      console.log('User Agent:', userAgent)
+      
+      if (/windows/.test(userAgent)) {
+        console.log('Windows platform detected')
+        return 'windows' as Platform
+      } else if (/ipad|iphone|ipod/.test(userAgent)) {
+        console.log('iOS platform detected')
+        return 'ios' as Platform
+      } else if (/android/.test(userAgent)) {
+        console.log('Android platform detected')
+        return 'android' as Platform
+      }
+      return null
     }
+
+    const detectedPlatform = detectPlatform()
+    setPlatform(detectedPlatform)
+    
+    // For iOS, show install button immediately
+    if (detectedPlatform === 'ios') {
+      console.log('Setting showInstallButton true for iOS')
+      setShowInstallButton(true)
+    }
+  }, [])
+
+  // Handle beforeinstallprompt event
+  useEffect(() => {
+    if (!platform) return // Wait for platform detection
+
+    console.log('Setting up beforeinstallprompt handler for platform:', platform)
 
     // Check if already installed
     const isAppInstalled = window.matchMedia('(display-mode: standalone)').matches
@@ -34,79 +53,74 @@ export default function PWAInstallPrompt() {
       return
     }
 
-    // Check PWA criteria
-    const checkPWACriteria = () => {
-      if ('serviceWorker' in navigator) {
-        console.log('Service Worker is supported')
-      } else {
-        console.log('Service Worker is not supported')
-      }
-
+    // Verify PWA requirements
+    const checkPWARequirements = () => {
       const manifest = document.querySelector('link[rel="manifest"]')
-      if (manifest) {
-        console.log('Web Manifest is present')
-      } else {
-        console.log('Web Manifest is missing')
-      }
+      console.log('Manifest present:', !!manifest)
+      
+      const hasServiceWorker = 'serviceWorker' in navigator
+      console.log('Service Worker supported:', hasServiceWorker)
+
+      // Check for required icons
+      const icons = ['/icons/icon-192x192.png', '/icons/icon-512x512.png']
+      icons.forEach(icon => {
+        fetch(icon)
+          .then(response => {
+            console.log(`Icon ${icon} status:`, response.status)
+          })
+          .catch(error => {
+            console.error(`Failed to fetch icon ${icon}:`, error)
+          })
+      })
+
+      return manifest && hasServiceWorker
     }
-    checkPWACriteria()
+
+    const meetsRequirements = checkPWARequirements()
+    console.log('Meets PWA requirements:', meetsRequirements)
 
     const handler = (e: Event) => {
-      console.log('beforeinstallprompt event captured', e)
+      console.log('beforeinstallprompt event captured')
       e.preventDefault()
       
-      // Store the event for later use
       setDeferredPrompt(e)
-      console.log('Deferred prompt set')
-      
-      // Show install button for Android
+      console.log('Deferred prompt stored')
+
       if (platform === 'android') {
-        console.log('Setting showInstallButton to true for Android')
+        console.log('Showing install button for Android')
         setShowInstallButton(true)
       }
     }
 
     window.addEventListener('beforeinstallprompt', handler)
-    console.log('beforeinstallprompt event listener added')
-    
-    // For iOS Safari
-    if (platform === 'ios') {
-      console.log('iOS platform detected, showing install button')
-      setShowInstallButton(true)
-    }
+    console.log('beforeinstallprompt listener added')
 
-    window.addEventListener('appinstalled', () => {
-      console.log('App installed event fired')
-      setShowInstallButton(false)
-      setDeferredPrompt(null)
-    })
-
+    // Clean up
     return () => {
-      console.log('Removing beforeinstallprompt event listener')
+      console.log('Cleaning up beforeinstallprompt listener')
       window.removeEventListener('beforeinstallprompt', handler)
     }
-  }, [platform])
+  }, [platform]) // Only re-run when platform changes
 
   const handleInstall = async () => {
-    console.log('handleInstall clicked', { platform, deferredPrompt: !!deferredPrompt })
-    
+    console.log('Install button clicked', { platform, hasDeferredPrompt: !!deferredPrompt })
+
     if (platform === 'ios') {
       alert('Tap the share button and then "Add to Home Screen" to install')
       return
     }
 
     if (!deferredPrompt) {
-      console.log('No deferred prompt available')
+      console.log('No installation prompt available')
       if (platform === 'android') {
-        console.log('Checking PWA criteria for Android...')
-        // Verify PWA requirements
+        // Check PWA requirements again
         const manifest = document.querySelector('link[rel="manifest"]')
         const hasServiceWorker = 'serviceWorker' in navigator
-        
+
         let message = 'Installation is not available right now.\n\nTroubleshooting:\n'
         if (!manifest) message += '- Web Manifest is missing\n'
         if (!hasServiceWorker) message += '- Service Worker is not supported\n'
-        message += '\nPlease try refreshing the page.'
+        message += '\nPlease try:\n1. Refreshing the page\n2. Clearing site data\n3. Checking your internet connection'
         
         alert(message)
       }
@@ -141,87 +155,60 @@ export default function PWAInstallPrompt() {
       }
     } catch (err) {
       console.error('Error installing PWA:', err)
-      alert('There was an error installing the app. Please check the console for details and try again.')
+      alert('There was an error installing the app. Please try:\n1. Refreshing the page\n2. Clearing site data\n3. Checking your internet connection')
     }
   }
 
+  // Early return if conditions aren't met
   if (!platform || !showInstallButton) {
     console.log('Not showing install button', { platform, showInstallButton })
     return null
   }
 
-  const getIcon = () => {
-    switch (platform) {
-      case 'windows':
-        return <FaWindows className="h-6 w-6" />
-      case 'ios':
-        return <FaApple className="h-6 w-6" />
-      case 'android':
-        return <FaAndroid className="h-6 w-6" />
-      default:
-        return <FaDownload className="h-6 w-6" />
-    }
-  }
-
-  const getButtonColor = () => {
-    switch (platform) {
-      case 'windows':
-        return 'text-blue-600 hover:bg-blue-50'
-      case 'ios':
-        return 'text-black hover:bg-gray-50'
-      case 'android':
-        return 'text-green-600 hover:bg-green-50'
-      default:
-        return 'text-blue-600 hover:bg-blue-50'
-    }
-  }
-
   console.log('Rendering install button for platform:', platform)
-  
+
   return (
     <>
-      {/* Main Install Popup - Now in top right */}
-      {showInstallButton && (
-        <div className="fixed top-4 right-4 bg-white p-4 rounded-lg shadow-lg z-50 w-[90%] max-w-sm border border-gray-200 animate-slide-down">
-          <div className="flex items-start justify-between">
-            <div className="flex items-center gap-3">
-              {platform === 'windows' && <FaWindows className="h-6 w-6 text-blue-600" />}
-              {platform === 'ios' && <FaApple className="h-6 w-6 text-black" />}
-              {platform === 'android' && <FaAndroid className="h-6 w-6 text-green-600" />}
-              <div>
-                <h3 className="text-lg font-semibold">
-                  {platform === 'ios' ? 'Add to Home Screen' : 'Install App'}
-                </h3>
-                <p className="text-gray-600 text-sm">
-                  Quick access to all calculators
-                </p>
-              </div>
+      {/* Main Install Popup */}
+      <div className="fixed top-4 right-4 bg-white p-4 rounded-lg shadow-lg z-50 w-[90%] max-w-sm border border-gray-200 animate-slide-down">
+        <div className="flex items-start justify-between">
+          <div className="flex items-center gap-3">
+            {platform === 'windows' && <FaWindows className="h-6 w-6 text-blue-600" />}
+            {platform === 'ios' && <FaApple className="h-6 w-6 text-black" />}
+            {platform === 'android' && <FaAndroid className="h-6 w-6 text-green-600" />}
+            <div>
+              <h3 className="text-lg font-semibold">
+                {platform === 'ios' ? 'Add to Home Screen' : 'Install App'}
+              </h3>
+              <p className="text-gray-600 text-sm">
+                Quick access to all calculators
+              </p>
             </div>
-            <button
-              onClick={() => {
-                console.log('Close button clicked')
-                setShowInstallButton(false)
-              }}
-              className="text-gray-400 hover:text-gray-600 p-1 -mt-1 -mr-1"
-              aria-label="Close"
-            >
-              <FaTimes className="h-5 w-5" />
-            </button>
           </div>
-          <div className="mt-4 flex justify-end">
-            <button
-              onClick={handleInstall}
-              className={`px-4 py-2 rounded-lg ${
-                platform === 'windows' ? 'bg-blue-600 hover:bg-blue-700' :
-                platform === 'ios' ? 'bg-black hover:bg-gray-800' :
-                'bg-green-600 hover:bg-green-700'
-              } text-white transition-colors`}
-            >
-              {platform === 'ios' ? 'Add to Home Screen' : 'Install App'}
-            </button>
-          </div>
+          <button
+            onClick={() => {
+              console.log('Close button clicked')
+              setShowInstallButton(false)
+            }}
+            className="text-gray-400 hover:text-gray-600 p-1 -mt-1 -mr-1"
+            aria-label="Close"
+          >
+            <FaTimes className="h-5 w-5" />
+          </button>
         </div>
-      )}
+        <div className="mt-4 flex justify-end">
+          <button
+            onClick={handleInstall}
+            className={`px-4 py-2 rounded-lg ${
+              platform === 'windows' ? 'bg-blue-600 hover:bg-blue-700' :
+              platform === 'ios' ? 'bg-black hover:bg-gray-800' :
+              'bg-green-600 hover:bg-green-700'
+            } text-white transition-colors`}
+          >
+            {platform === 'ios' ? 'Add to Home Screen' : 'Install App'}
+          </button>
+        </div>
+      </div>
     </>
   )
 }
