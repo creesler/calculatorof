@@ -5,12 +5,9 @@ const OFFLINE_URL = '/offline.html';
 const urlsToCache = [
   '/',
   '/manifest.json',
-  '/icons/icon-192x192.png',
-  '/icons/icon-512x512.png',
-  OFFLINE_URL,
-  '/math/fraction-calculator',
-  '/finance/roi-calculator',
-  '/favicon.ico'
+  'icons/icon-192x192.png',
+  'icons/icon-512x512.png',
+  OFFLINE_URL
 ];
 
 // Helper function to determine if a request is for a static asset
@@ -20,23 +17,51 @@ const isStaticAsset = (url) => {
          url.includes('/images/');
 };
 
+// Helper function to normalize URL paths
+const normalizeUrl = (url) => {
+  // Remove origin if present
+  const urlObj = new URL(url, self.location.origin);
+  return urlObj.pathname;
+};
+
 self.addEventListener('install', (event) => {
+  console.log('Service Worker installing...');
+  
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
-        console.log('Opened cache');
-        return cache.addAll(urlsToCache);
+        console.log('Cache opened, adding static resources');
+        // Add all URLs to cache
+        return Promise.all(
+          urlsToCache.map(url => {
+            return fetch(url)
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error(`Failed to fetch ${url}: ${response.status}`);
+                }
+                return cache.put(url, response);
+              })
+              .catch(error => {
+                console.error(`Failed to cache ${url}:`, error);
+                // Continue with other resources even if one fails
+                return Promise.resolve();
+              });
+          })
+        );
       })
       .catch(error => {
-        console.error('Cache addAll failed:', error);
+        console.error('Cache initialization failed:', error);
         // Continue with installation even if caching fails
         return Promise.resolve();
       })
   );
+  
   self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
+  console.log('Service Worker activating...');
+  
   event.waitUntil(
     Promise.all([
       clients.claim(),
@@ -45,6 +70,7 @@ self.addEventListener('activate', (event) => {
         return Promise.all(
           cacheNames.map((cacheName) => {
             if (cacheName !== CACHE_NAME) {
+              console.log('Deleting old cache:', cacheName);
               return caches.delete(cacheName);
             }
           })
@@ -56,30 +82,38 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
+  const pathname = normalizeUrl(url.pathname);
   
   // Use cache-first for static assets
-  if (isStaticAsset(url.pathname)) {
+  if (isStaticAsset(pathname)) {
     event.respondWith(
       caches.match(event.request)
         .then((response) => {
           if (response) {
-            return response; // Return from cache if found
+            console.log('Serving from cache:', pathname);
+            return response;
           }
-          // If not in cache, fetch from network and cache
+          
+          console.log('Fetching from network:', pathname);
           return fetch(event.request)
             .then((response) => {
               if (!response || response.status !== 200) {
                 return response;
               }
+              
               // Clone the response as it can only be consumed once
               const responseToCache = response.clone();
+              
               caches.open(CACHE_NAME)
                 .then((cache) => {
+                  console.log('Caching new resource:', pathname);
                   cache.put(event.request, responseToCache);
                 });
+                
               return response;
             })
-            .catch(() => {
+            .catch((error) => {
+              console.error('Fetch failed:', error);
               // Return offline page if fetch fails
               if (event.request.mode === 'navigate') {
                 return caches.match(OFFLINE_URL);
