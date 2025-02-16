@@ -11,33 +11,63 @@ export default function PWAInstallPrompt() {
   const [platform, setPlatform] = useState<Platform | null>(null)
 
   useEffect(() => {
+    console.log('PWAInstallPrompt mounted')
+    
     // Detect platform
     const userAgent = navigator.userAgent.toLowerCase()
+    console.log('User Agent:', userAgent)
+    
     if (/windows/.test(userAgent)) {
       setPlatform('windows')
     } else if (/ipad|iphone|ipod/.test(userAgent)) {
       setPlatform('ios')
     } else if (/android/.test(userAgent)) {
+      console.log('Android device detected')
       setPlatform('android')
     }
 
     // Check if already installed
     const isAppInstalled = window.matchMedia('(display-mode: standalone)').matches
-    if (isAppInstalled) return
+    console.log('Is app installed?', isAppInstalled)
+    if (isAppInstalled) {
+      console.log('App is already installed, not showing prompt')
+      return
+    }
+
+    // Check PWA criteria
+    const checkPWACriteria = () => {
+      if ('serviceWorker' in navigator) {
+        console.log('Service Worker is supported')
+      } else {
+        console.log('Service Worker is not supported')
+      }
+
+      const manifest = document.querySelector('link[rel="manifest"]')
+      if (manifest) {
+        console.log('Web Manifest is present')
+      } else {
+        console.log('Web Manifest is missing')
+      }
+    }
+    checkPWACriteria()
 
     const handler = (e: Event) => {
+      console.log('beforeinstallprompt event captured', e)
       e.preventDefault()
-      console.log('Captured beforeinstallprompt event')
+      
       // Store the event for later use
       setDeferredPrompt(e)
+      console.log('Deferred prompt set')
+      
       // Show install button for Android
       if (platform === 'android') {
-        console.log('Android platform detected, showing install button')
+        console.log('Setting showInstallButton to true for Android')
         setShowInstallButton(true)
       }
     }
 
     window.addEventListener('beforeinstallprompt', handler)
+    console.log('beforeinstallprompt event listener added')
     
     // For iOS Safari
     if (platform === 'ios') {
@@ -46,14 +76,20 @@ export default function PWAInstallPrompt() {
     }
 
     window.addEventListener('appinstalled', () => {
+      console.log('App installed event fired')
       setShowInstallButton(false)
       setDeferredPrompt(null)
     })
 
-    return () => window.removeEventListener('beforeinstallprompt', handler)
+    return () => {
+      console.log('Removing beforeinstallprompt event listener')
+      window.removeEventListener('beforeinstallprompt', handler)
+    }
   }, [platform])
 
   const handleInstall = async () => {
+    console.log('handleInstall clicked', { platform, deferredPrompt: !!deferredPrompt })
+    
     if (platform === 'ios') {
       alert('Tap the share button and then "Add to Home Screen" to install')
       return
@@ -62,7 +98,17 @@ export default function PWAInstallPrompt() {
     if (!deferredPrompt) {
       console.log('No deferred prompt available')
       if (platform === 'android') {
-        alert('Please try refreshing the page if the install prompt does not appear')
+        console.log('Checking PWA criteria for Android...')
+        // Verify PWA requirements
+        const manifest = document.querySelector('link[rel="manifest"]')
+        const hasServiceWorker = 'serviceWorker' in navigator
+        
+        let message = 'Installation is not available right now.\n\nTroubleshooting:\n'
+        if (!manifest) message += '- Web Manifest is missing\n'
+        if (!hasServiceWorker) message += '- Service Worker is not supported\n'
+        message += '\nPlease try refreshing the page.'
+        
+        alert(message)
       }
       return
     }
@@ -86,17 +132,23 @@ export default function PWAInstallPrompt() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ platform })
           })
+          console.log('Installation tracked successfully')
         } catch (error) {
           console.error('Failed to track installation:', error)
         }
+      } else {
+        console.log('User declined installation')
       }
     } catch (err) {
       console.error('Error installing PWA:', err)
-      alert('There was an error installing the app. Please try again.')
+      alert('There was an error installing the app. Please check the console for details and try again.')
     }
   }
 
-  if (!platform || !showInstallButton) return null
+  if (!platform || !showInstallButton) {
+    console.log('Not showing install button', { platform, showInstallButton })
+    return null
+  }
 
   const getIcon = () => {
     switch (platform) {
@@ -124,6 +176,8 @@ export default function PWAInstallPrompt() {
     }
   }
 
+  console.log('Rendering install button for platform:', platform)
+  
   return (
     <>
       {/* Main Install Popup - Now in top right */}
@@ -144,7 +198,10 @@ export default function PWAInstallPrompt() {
               </div>
             </div>
             <button
-              onClick={() => setShowInstallButton(false)}
+              onClick={() => {
+                console.log('Close button clicked')
+                setShowInstallButton(false)
+              }}
               className="text-gray-400 hover:text-gray-600 p-1 -mt-1 -mr-1"
               aria-label="Close"
             >
@@ -167,4 +224,4 @@ export default function PWAInstallPrompt() {
       )}
     </>
   )
-} 
+}
