@@ -41,7 +41,7 @@ export default function PWAInstallPrompt() {
 
   // Handle beforeinstallprompt event
   useEffect(() => {
-    if (!platform) return // Wait for platform detection
+    if (!platform || typeof window === 'undefined') return // Wait for platform detection and ensure we're in browser
 
     console.log('Setting up beforeinstallprompt handler for platform:', platform)
 
@@ -61,8 +61,10 @@ export default function PWAInstallPrompt() {
       const hasServiceWorker = 'serviceWorker' in navigator
       console.log('Service Worker supported:', hasServiceWorker)
 
-      // Check for required icons
-      const icons = ['/icons/icon-192x192.png', '/icons/icon-512x512.png']
+      // Check for required icons using current origin
+      const icons = ['icon-192x192.png', 'icon-512x512.png'].map(icon => 
+        `${window.location.origin}/icons/${icon}`
+      )
       icons.forEach(icon => {
         fetch(icon)
           .then(response => {

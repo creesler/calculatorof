@@ -51,7 +51,7 @@ self.addEventListener('install', (event) => {
                 throw new Error(`Failed to fetch ${url}: ${response.status}`);
               }
               console.log('Successfully cached:', url);
-              return cache.put(url, response);
+              return cache.put(absoluteUrl, response);
             })
             .catch(error => {
               console.error(`Failed to cache ${url}:`, error);

@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 export default function ServiceWorkerRegistration() {
   useEffect(() => {
     if (typeof window === 'undefined' || !('serviceWorker' in navigator)) {
+      console.log('Service Worker not supported');
       return;
     }
 
@@ -17,11 +18,17 @@ export default function ServiceWorkerRegistration() {
           console.log('Existing Service Worker unregistered');
         }
 
-        // Register the new service worker
-        const registration = await navigator.serviceWorker.register('/sw.js', {
+        // Register the new service worker with the current origin
+        const swUrl = `${window.location.origin}/sw.js`;
+        const registration = await navigator.serviceWorker.register(swUrl, {
           scope: '/'
         });
-        console.log('Service Worker registered successfully');
+        console.log('Service Worker registered successfully:', registration);
+
+        // Force update the service worker
+        if (registration.active) {
+          registration.active.postMessage({ type: 'SKIP_WAITING' });
+        }
       } catch (error) {
         console.error('Service Worker registration failed:', error);
       }
@@ -32,4 +39,4 @@ export default function ServiceWorkerRegistration() {
   }, []);
 
   return null;
-} 
+}
