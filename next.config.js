@@ -1,11 +1,40 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Enable App Router
+  experimental: {
+    appDir: true
+  },
   // Disable features that might cause HMR issues
-  reactStrictMode: false, // Temporarily disable for testing
-  swcMinify: false,      // Disable minification during development
+  reactStrictMode: false,
+  swcMinify: false,
   images: {
     unoptimized: true,
     domains: ['calculatorof.com']
+  },
+  // Additional redirects at Next.js level
+  async redirects() {
+    return [
+      {
+        source: '/calculator/:type*',
+        destination: '/calculators/:type*',
+        permanent: true,
+      },
+      {
+        source: '/pets/:path*',
+        destination: '/pet/:path*',
+        permanent: true,
+      },
+      {
+        source: '/calculators',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/calculator',
+        destination: '/',
+        permanent: true,
+      }
+    ]
   },
   // Optimize for development
   webpack: (config, { dev, isServer }) => {
@@ -50,6 +79,10 @@ const nextConfig = {
           {
             key: 'Referrer-Policy',
             value: 'strict-origin-when-cross-origin'
+          },
+          {
+            key: 'X-Robots-Tag',
+            value: 'index, follow'
           }
         ]
       }
@@ -57,4 +90,4 @@ const nextConfig = {
   }
 }
 
-module.exports = nextConfig 
+module.exports = nextConfig

@@ -5,5 +5,87 @@
       "src": "package.json",
       "use": "@vercel/next"
     }
+  ],
+  "redirects": [
+    { 
+      "source": "/calculators",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/calculator/:type",
+      "destination": "/calculators/:type",
+      "permanent": true
+    },
+    {
+      "source": "/pets/pet-food-calculator",
+      "destination": "/pet/pet-food-calculator",
+      "permanent": true
+    },
+    {
+      "source": "/calculator",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/finance/loan",
+      "destination": "/finance/loan-calculator",
+      "permanent": true
+    },
+    {
+      "source": "/finance/roi",
+      "destination": "/finance/roi-calculator",
+      "permanent": true
+    },
+    {
+      "source": "/health/bmi",
+      "destination": "/health/bmi-calculator",
+      "permanent": true
+    },
+    {
+      "source": "/health/calorie",
+      "destination": "/health/calorie-calculator",
+      "permanent": true
+    },
+    {
+      "source": "/math/percentage",
+      "destination": "/math/percentage-calculator",
+      "permanent": true
+    },
+    {
+      "source": "/math/scientific",
+      "destination": "/math/scientific-calculator",
+      "permanent": true
+    },
+    {
+      "source": "/math/fraction",
+      "destination": "/math/fraction-calculator",
+      "permanent": true
+    },
+    {
+      "source": "/pet/food",
+      "destination": "/pet/pet-food-calculator",
+      "permanent": true
+    },
+    {
+      "source": "/pets",
+      "destination": "/pet",
+      "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "index, follow"
+        },
+        {
+          "key": "Link",
+          "value": "</fonts/inter.woff2>; rel=preload; as=font; crossorigin=anonymous"
+        }
+      ]
+    }
   ]
-} 
+}

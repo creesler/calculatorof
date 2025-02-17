@@ -1,60 +1,93 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
-import { NextSeo } from 'next-seo'
 import Link from 'next/link'
 import Navigation from '@/components/Navigation'
 import { GA_MEASUREMENT_ID } from '@/lib/constants'
 import ServiceWorkerRegistration from '@/components/ServiceWorkerRegistration'
 import PWAInstallPrompt from '@/components/PWAInstallPrompt'
+import { siteConfig } from './seo-config'
 
 // Separate viewport configuration
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
+  maximumScale: 5,
   themeColor: '#3b82f6',
+  colorScheme: 'light dark'
 }
 
 // Regular metadata configuration
 export const metadata: Metadata = {
   metadataBase: new URL('https://calculatorof.com'),
-  title: 'Calculator Suite',
-  description: 'Free online calculators',
-  keywords: 'calculatorof, online calculator, finance calculator, health calculator, pet calculator, math calculator, ROI calculator, BMI calculator',
+  title: {
+    default: siteConfig.title,
+    template: '%s | CalculatorOf.com'
+  },
+  description: siteConfig.description,
+  keywords: siteConfig.keywords,
+  authors: siteConfig.authors,
+  creator: siteConfig.creator,
+  publisher: siteConfig.name,
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://calculatorof.com',
-    siteName: 'CalculatorOf.com',
-    title: 'CalculatorOf.com | Free Online Calculators',
-    description: 'Free online calculators for finance, health, pets, and math. Easy-to-use tools for all your calculation needs.',
+    url: siteConfig.url,
+    siteName: siteConfig.name,
+    title: siteConfig.title,
+    description: siteConfig.description,
     images: [
       {
-        url: '/images/calculatorof.png',
+        url: siteConfig.ogImage,
         width: 1200,
         height: 630,
-        alt: 'CalculatorOf.com'
+        alt: siteConfig.name,
       }
     ]
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'CalculatorOf.com | Free Online Calculators',
-    description: 'Free online calculators for every need',
-    images: ['/images/calculatorof.png']
+    title: siteConfig.title,
+    description: siteConfig.description,
+    images: [siteConfig.ogImage],
+    creator: '@calculatorof',
+    site: '@calculatorof',
   },
   alternates: {
-    canonical: 'https://calculatorof.com'
+    canonical: siteConfig.url,
+    types: {
+      'application/rss+xml': `${siteConfig.url}/rss.xml`,
+    }
   },
-  other: {
-    'p:domain_verify': '8b307b5b857ccc07264de92450c3dd3f'
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  verification: {
+    google: 'your-google-verification-code',
+    other: {
+      'yandex-verification': 'your-yandex-verification-code',
+      'msvalidate.01': 'your-bing-verification-code',
+    }
   },
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'Calculator Suite',
+    title: siteConfig.name,
   },
+  category: 'technology',
 }
 
 export default function RootLayout({
@@ -62,17 +95,57 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const schemaOrg = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: siteConfig.name,
+    alternateName: 'CalculatorOf',
+    url: siteConfig.url,
+    description: siteConfig.description,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${siteConfig.url}/search?q={search_term_string}`
+      },
+      'query-input': 'required name=search_term_string'
+    },
+    sameAs: [
+      'https://twitter.com/calculatorof',
+      'https://www.facebook.com/calculatorof',
+      'https://www.linkedin.com/company/calculatorof'
+    ]
+  }
+
   return (
     <html lang="en">
       <head>
-        {/* Restore PWA meta tags */}
+        {/* PWA meta tags */}
         <link rel="manifest" href="/manifest.json" crossOrigin="use-credentials" />
         <meta name="theme-color" content="#3b82f6" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="Calculator Suite" />
+        <meta name="apple-mobile-web-app-title" content={siteConfig.name} />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         <meta name="mobile-web-app-capable" content="yes" />
+        
+        {/* Favicon */}
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
+        
+        {/* RSS Feed */}
+        <link rel="alternate" type="application/rss+xml" title="RSS Feed for CalculatorOf.com" href="/rss.xml" />
+        
+        {/* Preconnect to required origins */}
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        
+        {/* Schema.org JSON-LD */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrg) }}
+        />
       </head>
       <body>
         <Navigation />
@@ -148,7 +221,7 @@ export default function RootLayout({
         {/* Add ServiceWorkerRegistration */}
         <ServiceWorkerRegistration />
 
-        {/* Place Google Analytics here */}
+        {/* Google Analytics */}
         <script
           async
           defer
@@ -171,12 +244,3 @@ export default function RootLayout({
     </html>
   )
 }
-
-<NextSeo
-  additionalMetaTags={[
-    {
-      name: 'p:domain_verify',
-      content: '8b307b5b857ccc07264de92450c3dd3f'
-    }
-  ]}
-/> 

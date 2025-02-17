@@ -1,5 +1,42 @@
+# https://www.robotstxt.org/robotstxt.html
 User-agent: *
 Allow: /
 
-# Sitemaps
-Sitemap: https://calculatorof.com/sitemap.xml 
+# Allow all crawlers
+User-agent: *
+Allow: /*.js
+Allow: /*.css
+Allow: /*.png
+Allow: /*.jpg
+Allow: /*.gif
+Allow: /*.svg
+Allow: /*.ico
+
+# Block certain paths
+Disallow: /api/
+Disallow: /_next/
+Disallow: /static/
+
+# Sitemap
+Sitemap: https://calculatorof.com/sitemap.xml
+
+# Crawl delay
+Crawl-delay: 1
+
+# Additional rules for specific bots
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Googlebot-Image
+Allow: /images/
+Allow: /*.jpg
+Allow: /*.jpeg
+Allow: /*.gif
+Allow: /*.png
+Allow: /*.webp
+Allow: /*.svg
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
