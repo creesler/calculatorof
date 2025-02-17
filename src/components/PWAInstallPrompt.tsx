@@ -32,16 +32,32 @@ export default function PWAInstallPrompt() {
     const detectedPlatform = detectPlatform()
     setPlatform(detectedPlatform)
     
-    // For iOS, show install button immediately
-    if (detectedPlatform === 'ios') {
-      console.log('Setting showInstallButton true for iOS')
-      setShowInstallButton(true)
+    // For iOS and Android, show install button if meets PWA criteria
+    if (detectedPlatform === 'ios' || detectedPlatform === 'android') {
+      const checkPWARequirements = () => {
+        const manifest = document.querySelector('link[rel="manifest"]')
+        const hasServiceWorker = 'serviceWorker' in navigator
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+        
+        console.log('PWA Requirements Check:', {
+          manifest: !!manifest,
+          serviceWorker: hasServiceWorker,
+          isStandalone
+        })
+
+        return manifest && hasServiceWorker && !isStandalone
+      }
+
+      if (checkPWARequirements()) {
+        console.log(`Setting showInstallButton true for ${detectedPlatform}`)
+        setShowInstallButton(true)
+      }
     }
   }, [])
 
   // Handle beforeinstallprompt event
   useEffect(() => {
-    if (!platform || typeof window === 'undefined') return // Wait for platform detection and ensure we're in browser
+    if (!platform || typeof window === 'undefined') return
 
     console.log('Setting up beforeinstallprompt handler for platform:', platform)
 
@@ -50,36 +66,9 @@ export default function PWAInstallPrompt() {
     console.log('Is app installed?', isAppInstalled)
     if (isAppInstalled) {
       console.log('App is already installed, not showing prompt')
+      setShowInstallButton(false)
       return
     }
-
-    // Verify PWA requirements
-    const checkPWARequirements = () => {
-      const manifest = document.querySelector('link[rel="manifest"]')
-      console.log('Manifest present:', !!manifest)
-      
-      const hasServiceWorker = 'serviceWorker' in navigator
-      console.log('Service Worker supported:', hasServiceWorker)
-
-      // Check for required icons using current origin
-      const icons = ['icon-192x192.png', 'icon-512x512.png'].map(icon => 
-        `${window.location.origin}/icons/${icon}`
-      )
-      icons.forEach(icon => {
-        fetch(icon)
-          .then(response => {
-            console.log(`Icon ${icon} status:`, response.status)
-          })
-          .catch(error => {
-            console.error(`Failed to fetch icon ${icon}:`, error)
-          })
-      })
-
-      return manifest && hasServiceWorker
-    }
-
-    const meetsRequirements = checkPWARequirements()
-    console.log('Meets PWA requirements:', meetsRequirements)
 
     const handler = (e: Event) => {
       console.log('beforeinstallprompt event captured')
@@ -88,8 +77,8 @@ export default function PWAInstallPrompt() {
       setDeferredPrompt(e)
       console.log('Deferred prompt stored')
 
-      if (platform === 'android') {
-        console.log('Showing install button for Android')
+      if (platform === 'android' || platform === 'windows') {
+        console.log(`Showing install button for ${platform}`)
         setShowInstallButton(true)
       }
     }
@@ -102,7 +91,7 @@ export default function PWAInstallPrompt() {
       console.log('Cleaning up beforeinstallprompt listener')
       window.removeEventListener('beforeinstallprompt', handler)
     }
-  }, [platform]) // Only re-run when platform changes
+  }, [platform])
 
   const handleInstall = async () => {
     console.log('Install button clicked', { platform, hasDeferredPrompt: !!deferredPrompt })
@@ -112,9 +101,14 @@ export default function PWAInstallPrompt() {
       return
     }
 
+    if (platform === 'android' && !deferredPrompt) {
+      alert('To install:\n1. Tap the menu button (⋮) in your browser\n2. Select "Install app" or "Add to Home Screen"')
+      return
+    }
+
     if (!deferredPrompt) {
       console.log('No installation prompt available')
-      if (platform === 'android') {
+      if (platform === 'android' || platform === 'windows') {
         // Check PWA requirements again
         const manifest = document.querySelector('link[rel="manifest"]')
         const hasServiceWorker = 'serviceWorker' in navigator
