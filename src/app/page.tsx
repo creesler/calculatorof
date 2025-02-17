@@ -95,15 +95,15 @@ export default function Home() {
       <FloatingButtons />
       <main className="container mx-auto px-4 py-8">
         <InstallPromo />
-        <h1 className="text-4xl font-bold text-center mb-12">
+        <h1 className="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-gray-900">
           Free Online Calculators
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {categories.map((category) => (
             <div key={category.slug} className="space-y-4">
-              <h2 className="text-2xl font-semibold">{category.name}</h2>
-              <p className="text-gray-600">{category.description}</p>
+              <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-900">{category.name}</h2>
+              <p className="text-gray-600 dark:text-gray-600">{category.description}</p>
               
               <div className="space-y-2">
                 {category.calculators.map((calculator) => (
@@ -112,8 +112,8 @@ export default function Home() {
                     href={`/${category.slug}/${calculator.slug}`}
                     className="block p-4 bg-white rounded-lg shadow hover:shadow-md transition-shadow"
                   >
-                    <h3 className="font-medium">{calculator.name}</h3>
-                    <p className="text-sm text-gray-500">{calculator.description}</p>
+                    <h3 className="font-medium text-gray-900 dark:text-gray-900">{calculator.name}</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-500">{calculator.description}</p>
                   </Link>
                 ))}
               </div>
@@ -122,16 +122,16 @@ export default function Home() {
         </div>
 
         <article className="prose lg:prose-xl mx-auto mt-12 px-4">
-          <h2>Free Online Calculators for Every Need</h2>
-          <p>
+          <h2 className="text-gray-900 dark:text-gray-900">Free Online Calculators for Every Need</h2>
+          <p className="text-gray-600 dark:text-gray-600">
             Welcome to CalculatorOf.com, your one-stop destination for all types of calculators. 
             Whether you're planning investments, checking your health metrics, calculating pet food portions, 
             or solving mathematical problems, we've got you covered with our easy-to-use calculators.
           </p>
 
           <section className="mt-8">
-            <h2>Why Choose Our Calculators?</h2>
-            <ul>
+            <h2 className="text-gray-900 dark:text-gray-900">Why Choose Our Calculators?</h2>
+            <ul className="text-gray-600 dark:text-gray-600">
               <li>Free to use</li>
               <li>User-friendly interface</li>
               <li>Accurate results</li>
@@ -143,4 +143,4 @@ export default function Home() {
       </main>
     </div>
   )
-} 
+}
