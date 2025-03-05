@@ -7,14 +7,14 @@
     }
   ],
   "redirects": [
-    { 
-      "source": "/calculators",
-      "destination": "/",
+    {
+      "source": "/calculator/:type",
+      "destination": "/:type",
       "permanent": true
     },
     {
-      "source": "/calculator/:type",
-      "destination": "/calculators/:type",
+      "source": "/calculators/:type",
+      "destination": "/:type",
       "permanent": true
     },
     {
@@ -24,6 +24,11 @@
     },
     {
       "source": "/calculator",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/calculators",
       "destination": "/",
       "permanent": true
     },
