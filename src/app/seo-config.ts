@@ -2,7 +2,7 @@ export const siteConfig = {
   name: 'CalculatorOf.com',
   title: 'Free Online Calculators for Finance, Health, Math & More',
   description: 'Free online calculators for finance, health, pets, and math. Easy-to-use tools for ROI, BMI, loan payments, calories, pet food portions, and more.',
-  url: 'https://calculatorof.com',
+  url: 'https://www.calculatorof.com',
   ogImage: '/images/calculatorof.png',
   links: {
     twitter: 'https://twitter.com/calculatorof',

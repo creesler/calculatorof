@@ -18,7 +18,7 @@ export const viewport: Viewport = {
 
 // Regular metadata configuration
 export const metadata: Metadata = {
-  metadataBase: new URL('https://calculatorof.com'),
+  metadataBase: new URL('https://www.calculatorof.com'),
   title: {
     default: siteConfig.title,
     template: '%s | CalculatorOf.com'
@@ -75,10 +75,10 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: 'your-google-verification-code',
+    google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION || '',
     other: {
-      'yandex-verification': 'your-yandex-verification-code',
-      'msvalidate.01': 'your-bing-verification-code',
+      'yandex-verification': process.env.NEXT_PUBLIC_YANDEX_VERIFICATION || '',
+      'msvalidate.01': process.env.NEXT_PUBLIC_BING_VERIFICATION || '',
     }
   },
   manifest: '/manifest.json',

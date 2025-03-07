@@ -8,6 +8,11 @@
   ],
   "redirects": [
     {
+      "source": "https://calculatorof.com/:path*",
+      "destination": "https://www.calculatorof.com/:path*",
+      "permanent": true
+    },
+    {
       "source": "/calculator/:type",
       "destination": "/:type",
       "permanent": true
