@@ -215,11 +215,109 @@ const BMICalculator = () => {
             <div className="bg-blue-50 p-6 rounded-lg my-8">
               <h3>Important Note</h3>
               <p>
-                BMI is a general guide and doesn't account for factors like muscle mass, bone density, age, and gender. 
-                Athletes and elderly people may need different assessments. Always consult healthcare professionals for 
+                BMI is a general guide and doesn't account for factors like muscle mass, bone density, age, and gender.
+                Athletes and elderly people may need different assessments. Always consult healthcare professionals for
                 personalized advice.
               </p>
             </div>
+
+            <h3>BMI Compared to Other Health Metrics</h3>
+            <p>
+              While BMI is widely used, it's just one of several methods to assess health based on body composition.
+              Here's how BMI compares to other common health metrics:
+            </p>
+            
+            <div className="overflow-x-auto my-6">
+              <table className="min-w-full bg-white border border-gray-300">
+                <thead>
+                  <tr className="bg-blue-100">
+                    <th className="py-2 px-4 border-b border-r">Metric</th>
+                    <th className="py-2 px-4 border-b border-r">What It Measures</th>
+                    <th className="py-2 px-4 border-b border-r">Advantages</th>
+                    <th className="py-2 px-4 border-b">Limitations</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="py-2 px-4 border-b border-r font-medium">BMI</td>
+                    <td className="py-2 px-4 border-b border-r">Weight relative to height</td>
+                    <td className="py-2 px-4 border-b border-r">
+                      <ul className="list-disc pl-4">
+                        <li>Simple to calculate</li>
+                        <li>No special equipment needed</li>
+                        <li>Well-established guidelines</li>
+                      </ul>
+                    </td>
+                    <td className="py-2 px-4 border-b">
+                      <ul className="list-disc pl-4">
+                        <li>Doesn't distinguish fat from muscle</li>
+                        <li>Doesn't account for body composition</li>
+                        <li>May misclassify athletes or elderly</li>
+                      </ul>
+                    </td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td className="py-2 px-4 border-b border-r font-medium">Body Fat Percentage</td>
+                    <td className="py-2 px-4 border-b border-r">Actual fat content relative to total weight</td>
+                    <td className="py-2 px-4 border-b border-r">
+                      <ul className="list-disc pl-4">
+                        <li>Directly measures fat</li>
+                        <li>More accurate health indicator</li>
+                        <li>Better for athletes</li>
+                      </ul>
+                    </td>
+                    <td className="py-2 px-4 border-b">
+                      <ul className="list-disc pl-4">
+                        <li>Requires special equipment</li>
+                        <li>More expensive to measure</li>
+                        <li>Less standardized guidelines</li>
+                      </ul>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-4 border-b border-r font-medium">Waist Circumference</td>
+                    <td className="py-2 px-4 border-b border-r">Abdominal fat distribution</td>
+                    <td className="py-2 px-4 border-b border-r">
+                      <ul className="list-disc pl-4">
+                        <li>Indicates visceral fat (most harmful)</li>
+                        <li>Simple to measure</li>
+                        <li>Good predictor of health risks</li>
+                      </ul>
+                    </td>
+                    <td className="py-2 px-4 border-b">
+                      <ul className="list-disc pl-4">
+                        <li>Doesn't account for overall body composition</li>
+                        <li>Measurement technique can vary</li>
+                        <li>Less useful for very tall/short individuals</li>
+                      </ul>
+                    </td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td className="py-2 px-4 border-b border-r font-medium">Waist-to-Hip Ratio</td>
+                    <td className="py-2 px-4 border-b border-r">Fat distribution pattern</td>
+                    <td className="py-2 px-4 border-b border-r">
+                      <ul className="list-disc pl-4">
+                        <li>Identifies "apple" vs "pear" shapes</li>
+                        <li>Better predictor of heart disease</li>
+                        <li>Accounts for body shape</li>
+                      </ul>
+                    </td>
+                    <td className="py-2 px-4 border-b">
+                      <ul className="list-disc pl-4">
+                        <li>Requires two measurements</li>
+                        <li>Doesn't account for total body fat</li>
+                        <li>Less familiar to general public</li>
+                      </ul>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <p>
+              For the most comprehensive health assessment, consider using multiple metrics rather than relying solely on BMI.
+              Consulting with healthcare professionals can help determine which measurements are most relevant for your specific situation.
+            </p>
 
             <h3>Frequently Asked Questions</h3>
             <div className="space-y-4">
@@ -227,8 +325,8 @@ const BMICalculator = () => {
                 <h4 itemProp="name">What is a healthy BMI range?</h4>
                 <div itemScope itemType="https://schema.org/Answer">
                   <p itemProp="text">
-                    A BMI between 18.5 and 24.9 is considered healthy for most adults. However, this range may not be 
-                    suitable for all body types and ethnicities. Some people may be healthy at BMIs slightly outside 
+                    A BMI between 18.5 and 24.9 is considered healthy for most adults. However, this range may not be
+                    suitable for all body types and ethnicities. Some people may be healthy at BMIs slightly outside
                     this range.
                   </p>
                 </div>
@@ -238,9 +336,42 @@ const BMICalculator = () => {
                 <h4 itemProp="name">Why might BMI not be accurate for everyone?</h4>
                 <div itemScope itemType="https://schema.org/Answer">
                   <p itemProp="text">
-                    BMI doesn't distinguish between weight from muscle and weight from fat. Athletes with high muscle 
-                    mass might have a high BMI but be healthy. Similarly, elderly people might have a normal BMI but 
+                    BMI doesn't distinguish between weight from muscle and weight from fat. Athletes with high muscle
+                    mass might have a high BMI but be healthy. Similarly, elderly people might have a normal BMI but
                     low muscle mass.
+                  </p>
+                </div>
+              </div>
+              
+              <div itemScope itemType="https://schema.org/Question">
+                <h4 itemProp="name">How often should I check my BMI?</h4>
+                <div itemScope itemType="https://schema.org/Answer">
+                  <p itemProp="text">
+                    For most adults, checking BMI once or twice a year is sufficient unless you're actively trying to lose
+                    or gain weight. If you're on a weight management program, you might want to check more frequently to
+                    track progress.
+                  </p>
+                </div>
+              </div>
+              
+              <div itemScope itemType="https://schema.org/Question">
+                <h4 itemProp="name">What's the difference between BMI and body fat percentage?</h4>
+                <div itemScope itemType="https://schema.org/Answer">
+                  <p itemProp="text">
+                    BMI is calculated solely from height and weight, while body fat percentage measures the actual proportion
+                    of fat in your body. Body fat percentage is more accurate for assessing health risks but requires specialized
+                    equipment to measure properly. BMI is easier to calculate and serves as a useful screening tool.
+                  </p>
+                </div>
+              </div>
+              
+              <div itemScope itemType="https://schema.org/Question">
+                <h4 itemProp="name">Can children use this BMI calculator?</h4>
+                <div itemScope itemType="https://schema.org/Answer">
+                  <p itemProp="text">
+                    This calculator is designed for adults. For children and teens (ages 2-19), BMI is calculated the same way
+                    but interpreted differently. Children's BMI should be assessed using age and sex-specific percentiles rather
+                    than the fixed categories used for adults. Please consult a pediatrician for proper assessment of a child's BMI.
                   </p>
                 </div>
               </div>
@@ -293,6 +424,52 @@ const BMICalculator = () => {
                     "@type": "WebPage",
                     "@id": "https://calculatorof.com/health/bmi-calculator"
                   }
+                },
+                {
+                  "@context": "https://schema.org",
+                  "@type": "FAQPage",
+                  "mainEntity": [
+                    {
+                      "@type": "Question",
+                      "name": "What is a healthy BMI range?",
+                      "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "A BMI between 18.5 and 24.9 is considered healthy for most adults. However, this range may not be suitable for all body types and ethnicities. Some people may be healthy at BMIs slightly outside this range."
+                      }
+                    },
+                    {
+                      "@type": "Question",
+                      "name": "Why might BMI not be accurate for everyone?",
+                      "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "BMI doesn't distinguish between weight from muscle and weight from fat. Athletes with high muscle mass might have a high BMI but be healthy. Similarly, elderly people might have a normal BMI but low muscle mass."
+                      }
+                    },
+                    {
+                      "@type": "Question",
+                      "name": "How often should I check my BMI?",
+                      "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "For most adults, checking BMI once or twice a year is sufficient unless you're actively trying to lose or gain weight. If you're on a weight management program, you might want to check more frequently to track progress."
+                      }
+                    },
+                    {
+                      "@type": "Question",
+                      "name": "What's the difference between BMI and body fat percentage?",
+                      "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "BMI is calculated solely from height and weight, while body fat percentage measures the actual proportion of fat in your body. Body fat percentage is more accurate for assessing health risks but requires specialized equipment to measure properly. BMI is easier to calculate and serves as a useful screening tool."
+                      }
+                    },
+                    {
+                      "@type": "Question",
+                      "name": "Can children use this BMI calculator?",
+                      "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "This calculator is designed for adults. For children and teens (ages 2-19), BMI is calculated the same way but interpreted differently. Children's BMI should be assessed using age and sex-specific percentiles rather than the fixed categories used for adults. Please consult a pediatrician for proper assessment of a child's BMI."
+                      }
+                    }
+                  ]
                 }
               ])
             }}

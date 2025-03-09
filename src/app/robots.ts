@@ -10,3 +10,5 @@ export default function robots(): MetadataRoute.Robots {
     sitemap: 'https://www.calculatorof.com/sitemap.xml',
   }
 } 
+
+

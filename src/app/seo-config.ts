@@ -26,7 +26,7 @@ export const siteConfig = {
   authors: [
     {
       name: 'CalculatorOf Team',
-      url: 'https://calculatorof.com',
+      url: 'https://www.calculatorof.com',
     },
   ],
   creator: 'CalculatorOf.com',

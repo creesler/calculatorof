@@ -7,19 +7,14 @@
     }
   ],
   "redirects": [
-    {
-      "source": "https://calculatorof.com/:path*",
-      "destination": "https://www.calculatorof.com/:path*",
+    { 
+      "source": "/calculators",
+      "destination": "/",
       "permanent": true
     },
     {
       "source": "/calculator/:type",
-      "destination": "/:type",
-      "permanent": true
-    },
-    {
-      "source": "/calculators/:type",
-      "destination": "/:type",
+      "destination": "/calculators/:type",
       "permanent": true
     },
     {
@@ -29,11 +24,6 @@
     },
     {
       "source": "/calculator",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/calculators",
       "destination": "/",
       "permanent": true
     },

@@ -11,7 +11,31 @@ const nextConfig = {
     unoptimized: true,
     domains: ['calculatorof.com']
   },
-  // Redirects are now managed exclusively in vercel.json
+  // Additional redirects at Next.js level
+  async redirects() {
+    return [
+      {
+        source: '/calculator/:type*',
+        destination: '/calculators/:type*',
+        permanent: true,
+      },
+      {
+        source: '/pets/:path*',
+        destination: '/pet/:path*',
+        permanent: true,
+      },
+      {
+        source: '/calculators',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/calculator',
+        destination: '/',
+        permanent: true,
+      }
+    ]
+  },
   // Optimize for development
   webpack: (config, { dev, isServer }) => {
     if (!isServer && dev) {

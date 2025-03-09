@@ -1,22 +1,49 @@
 import { MetadataRoute } from 'next'
+import { calculatorCategories, siteConfig, getAllCalculatorPaths } from './seo-config'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const calculatorTypes = ['basic', 'scientific', 'bmi', 'mortgage'] // add your calculator types
+  // Create entries for all calculator pages
+  const calculatorPages: MetadataRoute.Sitemap = []
   
-  const calculatorPages = calculatorTypes.map(type => ({
-    url: `https://your-domain.com/calculators/${type}`,
-    lastModified: new Date(),
-    changeFrequency: 'monthly' as const,
-    priority: 0.8,
-  }))
+  // Add category pages
+  calculatorCategories.forEach(category => {
+    // Add each calculator page
+    category.calculators.forEach(calculator => {
+      calculatorPages.push({
+        url: `${siteConfig.url}/${category.slug}/${calculator.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'monthly',
+        priority: 0.8,
+      })
+    })
+  })
 
+  // Add static pages
   return [
     {
-      url: 'https://your-domain.com',
+      url: siteConfig.url,
       lastModified: new Date(),
-      changeFrequency: 'yearly' as const,
+      changeFrequency: 'weekly',
       priority: 1,
+    },
+    {
+      url: `${siteConfig.url}/contact`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 0.5,
+    },
+    {
+      url: `${siteConfig.url}/privacy-policy`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 0.3,
+    },
+    {
+      url: `${siteConfig.url}/terms`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 0.3,
     },
     ...calculatorPages,
   ]
-} 
+}
