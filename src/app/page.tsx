@@ -33,6 +33,16 @@ const categories: Category[] = [
         name: "Loan Calculator",
         slug: "loan-calculator",
         description: "Calculate loan payments and interest"
+      },
+      {
+        name: "Retirement Calculator",
+        slug: "retirement-calculator",
+        description: "Find Your Perfect Savings Number"
+      },
+      {
+        name: "401(k) Calculator",
+        slug: "401k-calculator",
+        description: "Find Your Perfect Savings Number"
       }
     ]
   },

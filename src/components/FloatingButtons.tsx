@@ -5,10 +5,12 @@ import { useState, useEffect } from 'react'
 import { FaArrowUp, FaHome, FaWindows, FaApple, FaAndroid } from 'react-icons/fa'
 
 export default function FloatingButtons() {
+  const [mounted, setMounted] = useState(false)
   const [platform, setPlatform] = useState<'windows' | 'ios' | 'android' | null>(null)
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
 
   useEffect(() => {
+    setMounted(true)
     // Detect platform
     const userAgent = navigator.userAgent.toLowerCase()
     if (/windows/.test(userAgent)) {
@@ -27,6 +29,10 @@ export default function FloatingButtons() {
     window.addEventListener('beforeinstallprompt', handler)
     return () => window.removeEventListener('beforeinstallprompt', handler)
   }, [])
+
+  if (!mounted) {
+    return null
+  }
 
   const handleInstall = async () => {
     if (platform === 'ios') {
