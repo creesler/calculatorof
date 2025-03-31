@@ -43,13 +43,12 @@ export default function RetirementIncomeCalculator() {
     <div id="retirement-income-calculator-root" className="w-full">
       {isClient && (
         <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-xl text-gray-800">
-          {/* Header */}
           <h1 className="text-3xl font-bold mb-4">Retirement Income Calculator</h1>
           <p className="text-gray-600 mb-4">
             Plan your financial future with our Retirement Income Calculator. Estimate your monthly income based on your savings, expected return rate, and withdrawal period.
           </p>
 
-          {/* Calculator Interface */}
+          {/* Calculator UI */}
           <div className="space-y-4">
             <label className="block">
               <span className="font-medium">Total Retirement Savings ($)</span>
@@ -89,36 +88,35 @@ export default function RetirementIncomeCalculator() {
             </button>
           </div>
 
-          {/* Results Display */}
           {monthlyIncome !== null && (
             <div className="mt-6 p-4 bg-green-100 border-l-4 border-green-500 text-green-800 rounded-lg">
-              <p className="text-lg font-semibold">
-                Estimated Monthly Income: ${formatNumber(monthlyIncome)}
-              </p>
+              <p className="text-lg font-semibold">Estimated Monthly Income: ${formatNumber(monthlyIncome)}</p>
             </div>
           )}
-
           {/* Understanding Retirement Income */}
           <section className="mt-8">
             <h2 className="text-2xl font-semibold">Understanding Retirement Income</h2>
             <p className="text-gray-700 mt-2">
-              Your retirement income is determined by various factors, including savings, investment returns, and the duration of your withdrawals. Understanding these components is essential for a financially secure retirement.
+              Planning for retirement requires careful consideration of income sources, savings, and withdrawal strategies. Many retirees depend on a combination of Social Security, personal savings, and investments. Understanding how these factors interact will help ensure a financially secure retirement.
             </p>
             <p className="text-gray-700 mt-2">
-              A well-structured retirement plan ensures that you do not outlive your savings while maintaining a comfortable lifestyle. This calculator helps you estimate your potential monthly income so you can plan accordingly.
+              The biggest challenge in retirement planning is making sure your savings last as long as you do. Longevity, inflation, and unexpected medical expenses can impact financial stability. This calculator helps estimate how much monthly income you can safely withdraw without depleting your funds too soon.
+            </p>
+            <p className="text-gray-700 mt-2">
+              Using a strategic withdrawal plan, such as the 4% rule or a fixed percentage model, can help balance income needs and financial longevity. Proper planning allows retirees to adjust their spending based on economic conditions and lifestyle goals.
             </p>
           </section>
 
-          {/* How the Calculator Works */}
+          {/* Image & Calculation Explanation */}
           <section className="mt-8">
             <h2 className="text-2xl font-semibold">How the Calculator Works</h2>
             <p className="text-gray-700 mt-2">
-              This calculator follows a structured financial formula to determine your estimated monthly income:
+              This calculator estimates your monthly income using the fixed withdrawal formula:
             </p>
 
             <Image 
               src="/images/retirement-income-formula.webp" 
-              alt="Formula for calculating retirement income - detailed financial planning for retirement security." 
+              alt="Retirement Income Formula - How to Calculate Monthly Withdrawals" 
               width={600} 
               height={200} 
               className="mt-4 mx-auto rounded-lg"
@@ -133,36 +131,21 @@ export default function RetirementIncomeCalculator() {
               <li><strong>n</strong>: Number of months in retirement</li>
             </ul>
           </section>
+
+          {/* Key Takeaways */}
+          <section className="mt-8">
+            <h2 className="text-2xl font-semibold">Key Takeaways</h2>
+            <ul className="list-disc ml-5 mt-3 text-gray-700">
+              <li><strong>Start Early:</strong> The sooner you begin saving, the more you benefit from compound interest.</li>
+              <li><strong>Set Realistic Expectations:</strong> Plan for inflation, unexpected expenses, and longer life expectancy.</li>
+              <li><strong>Diversify Investments:</strong> A mix of stocks, bonds, and annuities balances risk and ensures stable income.</li>
+              <li><strong>Monitor Your Withdrawal Rate:</strong> The 4% rule is a good starting point, but adjustments may be needed.</li>
+              <li><strong>Use Tax-Advantaged Accounts:</strong> Maximizing IRA and 401(k) contributions can help reduce tax liabilities.</li>
+            </ul>
+          </section>
+
         </div>
       )}
     </div>
   );
 }
-          {/* Best Practices */}
-          <section className="mt-8">
-            <h2 className="text-2xl font-semibold">Best Practices for Retirement Planning</h2>
-            <ul className="list-disc ml-5 mt-3 text-gray-700">
-              <li>Start saving early to maximize compound interest.</li>
-              <li>Diversify investments to reduce risk exposure.</li>
-              <li>Monitor inflation and adjust withdrawals accordingly.</li>
-              <li>Delay Social Security benefits for a higher payout.</li>
-              <li>Work with a financial advisor for personalized guidance.</li>
-            </ul>
-          </section>
-
-          {/* Frequently Asked Questions */}
-          <section className="mt-8">
-            <h2 className="text-2xl font-semibold">Frequently Asked Questions</h2>
-            <details className="mt-2 border-b py-2">
-              <summary className="font-medium cursor-pointer">How much should I save for retirement?</summary>
-              <p className="text-gray-700 mt-2">
-                A common rule is to save at least 25 times your annual expenses to ensure financial security.
-              </p>
-            </details>
-            <details className="mt-2 border-b py-2">
-              <summary className="font-medium cursor-pointer">What is a good withdrawal rate?</summary>
-              <p className="text-gray-700 mt-2">
-                The 4% rule suggests withdrawing 4% of your savings annually to make it last 30+ years.
-              </p>
-            </details>
-          </section>

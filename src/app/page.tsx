@@ -43,6 +43,11 @@ const categories: Category[] = [
         name: "401(k) Calculator",
         slug: "401k-calculator",
         description: "Find Your Perfect Savings Number"
+      },
+      {
+        name: "Retirement Income Calculator",
+        slug: "retirement-income-calculator",
+        description: "Calculate your estimated retirement income with our free tool. Get step-by-step insights, expert guidance, and optimize your future financial planning."
       }
     ]
   },
