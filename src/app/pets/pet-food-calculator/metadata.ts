@@ -8,6 +8,6 @@ export const metadata: Metadata = {
     description: 'Free online pet food calculator - easy to use tool',
   },
   alternates: {
-    canonical: 'https://calculatorof.com/pet/pet-food-calculator'
+    canonical: 'https://calculatorof.com/pets/pet-food-calculator'
   }
 }

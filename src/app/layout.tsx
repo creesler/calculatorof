@@ -5,7 +5,7 @@ import Navigation from '@/components/Navigation'
 import { GA_MEASUREMENT_ID } from '@/lib/constants'
 import ServiceWorkerRegistration from '@/components/ServiceWorkerRegistration'
 import PWAInstallPrompt from '@/components/PWAInstallPrompt'
-import { siteConfig } from './seo-config'
+import { siteConfig } from '@/app/seo-config'
 
 // Separate viewport configuration
 export const viewport: Viewport = {
@@ -13,7 +13,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   themeColor: '#3b82f6',
-  colorScheme: 'light dark'
+  colorScheme: 'light'
 }
 
 // Regular metadata configuration

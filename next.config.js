@@ -1,30 +1,23 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Enable App Router
-  experimental: {
-    appDir: true
-  },
-  // Disable features that might cause HMR issues
-  reactStrictMode: false,
-  swcMinify: false,
+  // Production optimizations
+  reactStrictMode: true,
+  swcMinify: true,
   images: {
     unoptimized: true,
     domains: ['calculatorof.com']
   },
-  // Optimize for development
+  // Optimize build
   webpack: (config, { dev, isServer }) => {
+    // Only apply these optimizations in development
     if (!isServer && dev) {
-      // Optimize HMR
       config.optimization = {
         ...config.optimization,
-        moduleIds: 'named',
-        runtimeChunk: 'single',
         splitChunks: {
           chunks: 'all'
         }
       }
       
-      // Disable some watches
       config.watchOptions = {
         ignored: ['**/node_modules', '**/.git'],
         poll: false,

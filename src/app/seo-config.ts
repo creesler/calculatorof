@@ -1,3 +1,21 @@
+export interface Calculator {
+  slug: string;
+  name: string;
+  description: string;
+  keywords: string[];
+  schema: {
+    '@type': string;
+    category: string;
+  };
+}
+
+export interface Category {
+  name: string;
+  slug: string;
+  description: string;
+  calculators: Calculator[];
+}
+
 export const siteConfig = {
   name: 'CalculatorOf.com',
   title: 'Free Online Calculators for Finance, Health, Math & More',
@@ -32,7 +50,7 @@ export const siteConfig = {
   creator: 'CalculatorOf.com',
 }
 
-export const calculatorCategories = [
+export const calculatorCategories: Category[] = [
   {
     name: 'Finance',
     slug: 'finance',
@@ -56,6 +74,26 @@ export const calculatorCategories = [
         schema: {
           '@type': 'FinancialCalculator',
           category: 'Loan'
+        }
+      },
+      {
+        name: '401(k) Calculator',
+        slug: '401k-calculator',
+        description: 'Project your 401(k) retirement savings',
+        keywords: ['401k', 'retirement', 'savings calculator', 'investment growth', 'employer match'],
+        schema: {
+          '@type': 'FinancialCalculator',
+          category: 'Retirement'
+        }
+      },
+      {
+        name: 'Retirement Calculator',
+        slug: 'retirement-calculator',
+        description: 'Plan your retirement savings and income',
+        keywords: ['retirement', 'pension', 'savings calculator', 'retirement planning', 'retirement income'],
+        schema: {
+          '@type': 'FinancialCalculator',
+          category: 'Retirement'
         }
       }
     ]
@@ -143,27 +181,27 @@ export const calculatorCategories = [
   }
 ]
 
-export function getCalculatorBySlug(slug: string) {
+export function getCalculatorBySlug(slug: string): { category: Category } & Calculator | null {
   for (const category of calculatorCategories) {
-    const calculator = category.calculators.find(calc => calc.slug === slug)
+    const calculator = category.calculators.find((calc: Calculator) => calc.slug === slug);
     if (calculator) {
-      return { ...calculator, category }
+      return { ...calculator, category };
     }
   }
-  return null
+  return null;
 }
 
-export function getAllCalculatorPaths() {
-  const paths: string[] = []
-  calculatorCategories.forEach(category => {
-    category.calculators.forEach(calculator => {
-      paths.push(`/${category.slug}/${calculator.slug}`)
-    })
-  })
-  return paths
+export function getAllCalculatorPaths(): string[] {
+  const paths: string[] = [];
+  calculatorCategories.forEach((category: Category) => {
+    category.calculators.forEach((calculator: Calculator) => {
+      paths.push(`/${category.slug}/${calculator.slug}`);
+    });
+  });
+  return paths;
 }
 
-export function generateSEOMetadata(calculator: any, category: any) {
+export function generateSEOMetadata(calculator: Calculator, category: Category) {
   return {
     title: `${calculator.name} - Free Online Calculator | CalculatorOf.com`,
     description: `Free online ${calculator.description.toLowerCase()}. Easy to use, accurate results, and no registration required.`,
@@ -183,5 +221,5 @@ export function generateSEOMetadata(calculator: any, category: any) {
     alternates: {
       canonical: `${siteConfig.url}/${category.slug}/${calculator.slug}`,
     }
-  }
+  };
 }

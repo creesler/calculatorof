@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import FloatingButtons from "@/components/FloatingButtons";
 
 export default function FourOhOneKCalculator() {
   const [inputs, setInputs] = useState({
@@ -23,9 +24,6 @@ export default function FourOhOneKCalculator() {
     growth: "",
     monthlyIncome: ""
   });
-
-  const [showInstallPrompt, setShowInstallPrompt] = useState(false);
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
 
   const tocItems = [
     { id: "calculator", label: "401(k) Calculator" },
@@ -51,29 +49,6 @@ export default function FourOhOneKCalculator() {
       answer: "Employer matches typically follow formulas like '50% of your contributions up to 6% of salary.' This means if you earn $100,000 and contribute 6% ($6,000), your employer adds $3,000 (50% match). Always contribute enough to get the full match - it's free money!"
     }
   ];
-
-  // Handle PWA install prompt
-  useEffect(() => {
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-      setShowInstallPrompt(true);
-    });
-  }, []);
-
-  const handleInstall = async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') {
-      setShowInstallPrompt(false);
-    }
-    setDeferredPrompt(null);
-  };
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
 
   const handleCalculate = () => {
     // Simplified calculation for example purposes
@@ -104,7 +79,7 @@ export default function FourOhOneKCalculator() {
   };
 
   return (
-    <main className="container mx-auto px-4 py-8">
+    <main className="container mx-auto px-4 py-8 bg-white relative">
       {/* Breadcrumb */}
       <nav className="flex mb-6" aria-label="Breadcrumb">
         <ol className="inline-flex items-center space-x-1 md:space-x-3">
@@ -867,40 +842,7 @@ export default function FourOhOneKCalculator() {
         </button>
       </section>
 
-      {/* Floating Action Buttons */}
-      <div className="fixed bottom-6 right-6 flex flex-col gap-4 z-50">
-        <Link
-          href="/"
-          className="bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition-colors"
-          aria-label="Home"
-        >
-          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-          </svg>
-        </Link>
-        
-        <button
-          onClick={scrollToTop}
-          className="bg-gray-700 text-white p-3 rounded-full shadow-lg hover:bg-gray-800 transition-colors"
-          aria-label="Scroll to top"
-        >
-          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
-          </svg>
-        </button>
-
-        {showInstallPrompt && (
-          <button
-            onClick={handleInstall}
-            className="bg-green-600 text-white p-3 rounded-full shadow-lg hover:bg-green-700 transition-colors"
-            aria-label="Install app"
-          >
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
-          </button>
-        )}
-      </div>
+      <FloatingButtons />
     </main>
   );
 }

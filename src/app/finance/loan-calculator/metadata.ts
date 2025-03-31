@@ -1,13 +1,13 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Loan Calculator - Free Payment and Interest Calculator',
-  description: 'Calculate your loan payments and interest with our free online calculator. Easy to use tool for mortgage, personal, and business loans.',
+  title: 'Loan Calculator - Free Online Calculator',
+  description: 'Calculate loan calculator with our free online calculator. Easy to use tool.',
   openGraph: {
     title: 'Loan Calculator',
-    description: 'Free online loan calculator - calculate payments and interest',
+    description: 'Free online loan calculator - easy to use tool',
   },
   alternates: {
     canonical: 'https://calculatorof.com/finance/loan-calculator'
   }
-} 
+}

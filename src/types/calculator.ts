@@ -102,4 +102,17 @@ export interface ScientificInputs {
 export interface ScientificResults {
   result: number | string;
   error?: string;
+}
+
+export interface CalculatorInputs {
+  initialValue: number;
+  finalValue: number;
+  time: number;
+  additionalValue: number;
+}
+
+export interface CalculatorResults {
+  mainResult: number;
+  netValue: number;
+  additionalMetric: number;
 } 

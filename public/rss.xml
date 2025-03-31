@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>CalculatorOf.com - Free Online Calculators</title>
+    <link>https://calculatorof.com</link>
+    <description>Free online calculators for finance, health, pets, and math. Easy-to-use tools for all your calculation needs.</description>
+    <language>en-us</language>
+    <lastBuildDate>2025-03-31</lastBuildDate>
+    <atom:link href="https://calculatorof.com/rss.xml" rel="self" type="application/rss+xml"/>
+    
+    <item>
+      <title>ROI Calculator - Free Online Calculator</title>
+      <description>Calculate Return on Investment. Easy to use, accurate results, and no registration required.</description>
+      <link>https://calculatorof.com/finance/roi-calculator</link>
+      <guid>https://calculatorof.com/finance/roi-calculator</guid>
+      <pubDate>2025-03-31</pubDate>
+      <category>Finance</category>
+    </item>
+    <item>
+      <title>Loan Calculator - Free Online Calculator</title>
+      <description>Calculate loan payments and interest. Easy to use, accurate results, and no registration required.</description>
+      <link>https://calculatorof.com/finance/loan-calculator</link>
+      <guid>https://calculatorof.com/finance/loan-calculator</guid>
+      <pubDate>2025-03-31</pubDate>
+      <category>Finance</category>
+    </item>
+    <item>
+      <title>401(k) Calculator - Free Online Calculator</title>
+      <description>Project your 401(k) retirement savings. Easy to use, accurate results, and no registration required.</description>
+      <link>https://calculatorof.com/finance/401k-calculator</link>
+      <guid>https://calculatorof.com/finance/401k-calculator</guid>
+      <pubDate>2025-03-31</pubDate>
+      <category>Finance</category>
+    </item>
+    <item>
+      <title>Retirement Calculator - Free Online Calculator</title>
+      <description>Plan your retirement savings and income. Easy to use, accurate results, and no registration required.</description>
+      <link>https://calculatorof.com/finance/retirement-calculator</link>
+      <guid>https://calculatorof.com/finance/retirement-calculator</guid>
+      <pubDate>2025-03-31</pubDate>
+      <category>Finance</category>
+    </item>
+    <item>
+      <title>BMI Calculator - Free Online Calculator</title>
+      <description>Calculate Body Mass Index. Easy to use, accurate results, and no registration required.</description>
+      <link>https://calculatorof.com/health/bmi-calculator</link>
+      <guid>https://calculatorof.com/health/bmi-calculator</guid>
+      <pubDate>2025-03-31</pubDate>
+      <category>Health</category>
+    </item>
+    <item>
+      <title>Calorie Calculator - Free Online Calculator</title>
+      <description>Calculate daily calorie needs. Easy to use, accurate results, and no registration required.</description>
+      <link>https://calculatorof.com/health/calorie-calculator</link>
+      <guid>https://calculatorof.com/health/calorie-calculator</guid>
+      <pubDate>2025-03-31</pubDate>
+      <category>Health</category>
+    </item>
+    <item>
+      <title>Test Calculator - Free Online Calculator</title>
+      <description>Calculate test calculator. Easy to use, accurate results, and no registration required.</description>
+      <link>https://calculatorof.com/health/test-calculator</link>
+      <guid>https://calculatorof.com/health/test-calculator</guid>
+      <pubDate>2025-03-31</pubDate>
+      <category>Health</category>
+    </item>
+    <item>
+      <title>Pet Food Calculator - Free Online Calculator</title>
+      <description>Calculate pet food portions. Easy to use, accurate results, and no registration required.</description>
+      <link>https://calculatorof.com/pet/pet-food-calculator</link>
+      <guid>https://calculatorof.com/pet/pet-food-calculator</guid>
+      <pubDate>2025-03-31</pubDate>
+      <category>Pet</category>
+    </item>
+    <item>
+      <title>Percentage Calculator - Free Online Calculator</title>
+      <description>Calculate percentages. Easy to use, accurate results, and no registration required.</description>
+      <link>https://calculatorof.com/math/percentage-calculator</link>
+      <guid>https://calculatorof.com/math/percentage-calculator</guid>
+      <pubDate>2025-03-31</pubDate>
+      <category>Math</category>
+    </item>
+    <item>
+      <title>Scientific Calculator - Free Online Calculator</title>
+      <description>Advanced mathematical calculations. Easy to use, accurate results, and no registration required.</description>
+      <link>https://calculatorof.com/math/scientific-calculator</link>
+      <guid>https://calculatorof.com/math/scientific-calculator</guid>
+      <pubDate>2025-03-31</pubDate>
+      <category>Math</category>
+    </item>
+    <item>
+      <title>Fraction Calculator - Free Online Calculator</title>
+      <description>Calculate and simplify fractions. Easy to use, accurate results, and no registration required.</description>
+      <link>https://calculatorof.com/math/fraction-calculator</link>
+      <guid>https://calculatorof.com/math/fraction-calculator</guid>
+      <pubDate>2025-03-31</pubDate>
+      <category>Math</category>
+    </item>
+    <item>
+      <title>Pet Food Calculator - Free Online Calculator</title>
+      <description>Calculate pet food portions. Easy to use, accurate results, and no registration required.</description>
+      <link>https://calculatorof.com/pets/pet-food-calculator</link>
+      <guid>https://calculatorof.com/pets/pet-food-calculator</guid>
+      <pubDate>2025-03-31</pubDate>
+      <category>Pet</category>
+    </item>
+    <item>
+      <title>[type] Calculator - Free Online Calculator</title>
+      <description>Calculate [type] calculator. Easy to use, accurate results, and no registration required.</description>
+      <link>https://calculatorof.com/[category]/[type]-calculator</link>
+      <guid>https://calculatorof.com/[category]/[type]-calculator</guid>
+      <pubDate>2025-03-31</pubDate>
+      <category>[category]</category>
+    </item>
+  </channel>
+</rss>
