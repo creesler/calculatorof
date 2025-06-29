@@ -1,6 +1,4 @@
 import { NextResponse } from 'next/server';
-import { readFileSync } from 'fs';
-import { join } from 'path';
 import { connectToDatabase } from '@/lib/mongodb';
 
 const SITE_URL = 'https://calculatorof.com';
@@ -11,28 +9,26 @@ interface Calculator {
   lastUpdated?: string;
 }
 
+function generateCalculatorUrl(category: string, slug: string, lastUpdated?: string): string {
+  return `
+  <url>
+    <loc>${SITE_URL}/${category.toLowerCase()}/${slug}</loc>
+    ${lastUpdated ? `<lastmod>${new Date(lastUpdated).toISOString()}</lastmod>` : ''}
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>`;
+}
+
 export async function GET() {
   try {
-    // Try to read existing sitemap
-    try {
-      const sitemap = readFileSync('public/sitemap.xml', 'utf-8');
-      return new NextResponse(sitemap, {
-        headers: {
-          'Content-Type': 'application/xml',
-        },
-      });
-    } catch (error) {
-      // If sitemap doesn't exist, generate it
-      const { db } = await connectToDatabase();
-      const calculators = await db
-        .collection('calculators')
-        .find({})
-        .project({ slug: 1, category: 1, lastUpdated: 1 })
-        .toArray() as Calculator[];
+    const { db } = await connectToDatabase();
+    const calculators = await db
+      .collection('calculators')
+      .find({})
+      .project({ slug: 1, category: 1, lastUpdated: 1 })
+      .toArray() as Calculator[];
 
-      // Create XML sitemap with category-based URLs
-      const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    const staticUrls = `
   <!-- Homepage -->
   <url>
     <loc>${SITE_URL}</loc>
@@ -55,29 +51,31 @@ export async function GET() {
     <loc>${SITE_URL}/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
-  </url>
+  </url>`;
+
+    const calculatorUrls = calculators
+      .flatMap((calc: Calculator) => 
+        calc.category.map((category: string) => 
+          generateCalculatorUrl(category, calc.slug, calc.lastUpdated)
+        )
+      )
+      .join('');
+
+    const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  ${staticUrls}
   
   <!-- Calculator Pages -->
-  ${calculators.flatMap((calc: Calculator) => 
-    calc.category.map((category: string) => `
-  <url>
-    <loc>${SITE_URL}/${category.toLowerCase()}/${calc.slug}</loc>
-    ${calc.lastUpdated ? `<lastmod>${new Date(calc.lastUpdated).toISOString()}</lastmod>` : ''}
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>`
-    )
-  ).join('')}
+  ${calculatorUrls}
 </urlset>`;
 
-      return new NextResponse(sitemap, {
-        headers: {
-          'Content-Type': 'application/xml',
-        },
-      });
-    }
+    return new NextResponse(sitemap, {
+      headers: {
+        'Content-Type': 'application/xml',
+      },
+    });
   } catch (error) {
-    console.error('Error serving sitemap:', error);
+    console.error('Error generating sitemap:', error);
     return new NextResponse('Error generating sitemap', { status: 500 });
   }
 } 
