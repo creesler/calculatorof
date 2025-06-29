@@ -1,8 +1,15 @@
 import { NextResponse } from 'next/server';
 import { readFileSync } from 'fs';
+import { join } from 'path';
 import { connectToDatabase } from '@/lib/mongodb';
 
 const SITE_URL = 'https://calculatorof.com';
+
+interface Calculator {
+  slug: string;
+  category: string[];
+  lastUpdated?: string;
+}
 
 export async function GET() {
   try {
@@ -21,7 +28,7 @@ export async function GET() {
         .collection('calculators')
         .find({})
         .project({ slug: 1, category: 1, lastUpdated: 1 })
-        .toArray();
+        .toArray() as Calculator[];
 
       // Create XML sitemap with category-based URLs
       const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
@@ -51,8 +58,8 @@ export async function GET() {
   </url>
   
   <!-- Calculator Pages -->
-  ${calculators.flatMap(calc => 
-    calc.category.map(category => `
+  ${calculators.flatMap((calc: Calculator) => 
+    calc.category.map((category: string) => `
   <url>
     <loc>${SITE_URL}/${category.toLowerCase()}/${calc.slug}</loc>
     ${calc.lastUpdated ? `<lastmod>${new Date(calc.lastUpdated).toISOString()}</lastmod>` : ''}
