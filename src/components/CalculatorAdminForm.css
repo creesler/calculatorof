@@ -1,0 +1,111 @@
+.calculator-admin-form {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.calculator-admin-form h1 {
+    margin-bottom: 30px;
+}
+
+.calculator-admin-form section {
+    margin-bottom: 30px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.calculator-admin-form h2 {
+    margin-bottom: 20px;
+}
+
+.calculator-admin-form div {
+    margin-bottom: 15px;
+}
+
+.calculator-admin-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.calculator-admin-form input[type="text"],
+.calculator-admin-form input[type="url"],
+.calculator-admin-form input[type="date"],
+.calculator-admin-form textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.calculator-admin-form textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.calculator-admin-form button {
+    padding: 8px 16px;
+    background-color: #0070f3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.calculator-admin-form button:hover {
+    background-color: #0051cc;
+}
+
+.calculator-admin-form button[type="submit"] {
+    margin-top: 20px;
+    padding: 12px 24px;
+    font-size: 16px;
+}
+
+.calculator-admin-form ul {
+    list-style: none;
+    padding: 0;
+}
+
+.calculator-admin-form li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.calculator-admin-form li button {
+    background-color: #dc3545;
+}
+
+.calculator-admin-form li button:hover {
+    background-color: #bb2d3b;
+}
+
+.faq-item,
+.external-link-item {
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.faq-item input,
+.faq-item textarea,
+.external-link-item input {
+    margin-bottom: 10px;
+}
+
+/* Required field indicator */
+label:after {
+    content: " *";
+    color: #dc3545;
+}
+
+/* Optional fields */
+label:not([for="title"]):not([for="slug"]):not([for="seo.title"]):not([for="seo.description"]):after {
+    content: "";
+}
