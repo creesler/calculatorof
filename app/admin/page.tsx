@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import CalculatorAdminForm from '@/components/CalculatorAdminForm';
-import { CalculatorPage } from '@/types/calculator';
+import type { CalculatorPage } from '@/types/calculator';
 
 export default function AdminPage() {
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');

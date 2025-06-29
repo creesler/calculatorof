@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import './CalculatorAdminForm.css';
 import './preview.css';
 import CalculatorPreview from './CalculatorPreview';
-import { CalculatorPage } from '@/types/calculator';
+import type { CalculatorPage } from '@/types/calculator';
 
 interface Props {
   onSubmit: (data: CalculatorPage) => Promise<void>;

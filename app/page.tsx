@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { connectToDatabase } from '@/lib/mongodb';
-import { CalculatorPage } from '@/types/calculator';
+import type { CalculatorPage } from '@/types/calculator';
 import CategoryAccordion from './components/accordion/CategoryAccordion';
 
 export const metadata: Metadata = {

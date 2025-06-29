@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { connectToDatabase } from '@/lib/mongodb';
-import { CalculatorPage } from '@/types/calculator';
+import type { CalculatorPage } from '@/types/calculator';
 
 interface Props {
   params: {

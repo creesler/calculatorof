@@ -1,7 +1,8 @@
 'use client';
 
-import React from 'react';
-import { CalculatorPage } from './types';
+import React, { useState } from 'react';
+import type { CalculatorPage } from './types';
+import './preview.css';
 
 interface PreviewProps {
   data: CalculatorPage;
