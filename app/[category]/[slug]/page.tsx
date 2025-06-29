@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { connectToDatabase } from '@/lib/mongodb';
 import type { CalculatorPage } from '@/types/calculator';
-import ShareButtonsWrapper from '../../components/ShareButtonsWrapper';
+import ShareButtonsWrapper from '@/app/components/ShareButtonsWrapper';
 
 interface Props {
   params: {
