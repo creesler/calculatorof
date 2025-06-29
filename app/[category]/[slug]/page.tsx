@@ -11,17 +11,22 @@ interface Props {
   };
 }
 
+interface CalculatorWithCategory {
+  slug: string;
+  category: string[];
+}
+
 export async function generateStaticParams() {
   const { db } = await connectToDatabase();
   const calculators = await db
     .collection('calculators')
     .find({})
     .project({ slug: 1, category: 1 })
-    .toArray();
+    .toArray() as CalculatorWithCategory[];
 
   // Generate all possible category-slug combinations
-  const params = calculators.flatMap((calc) => 
-    calc.category.map((cat) => ({
+  const params = calculators.flatMap((calc: CalculatorWithCategory) => 
+    calc.category.map((cat: string) => ({
       category: cat.toLowerCase(),
       slug: calc.slug,
     }))
