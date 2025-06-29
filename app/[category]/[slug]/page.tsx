@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { connectToDatabase } from '@/lib/mongodb';
 import type { CalculatorPage } from '@/types/calculator';
-import { ShareButtons } from '../../components/ShareButtons';
+import ShareButtonsWrapper from '../../components/ShareButtonsWrapper';
 
 interface Props {
   params: {
@@ -122,7 +122,7 @@ export default async function CalculatorPage({ params }: Props) {
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
               {calculator.title}
             </h1>
-            <ShareButtons 
+            <ShareButtonsWrapper 
               url={`https://calculator.of/${params.category}/${params.slug}`}
               title={calculator.title}
             />
