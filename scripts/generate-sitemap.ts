@@ -1,18 +1,29 @@
+import { MongoClient } from 'mongodb';
 import { writeFileSync } from 'fs';
 import { join } from 'path';
-import { connectToDatabase } from '../lib/mongodb';
 
 const SITE_URL = 'https://calculatorof.com';
 
+interface Calculator {
+  slug: string;
+  category: string[];
+  lastUpdated?: string;
+}
+
 async function generateSitemap() {
+  if (!process.env.MONGODB_URI) {
+    throw new Error('Please define the MONGODB_URI environment variable');
+  }
+
+  const client = await MongoClient.connect(process.env.MONGODB_URI);
+  const db = client.db();
+
   try {
-    // Connect to MongoDB and get all calculator data
-    const { db } = await connectToDatabase();
     const calculators = await db
       .collection('calculators')
       .find({})
       .project({ slug: 1, category: 1, lastUpdated: 1 })
-      .toArray();
+      .toArray() as Calculator[];
 
     // Create XML sitemap with category-based URLs
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
@@ -31,14 +42,19 @@ async function generateSitemap() {
     <priority>0.3</priority>
   </url>
   <url>
+    <loc>${SITE_URL}/privacy-policy</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
     <loc>${SITE_URL}/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
   
   <!-- Calculator Pages -->
-  ${calculators.flatMap(calc => 
-    calc.category.map(category => `
+  ${calculators.flatMap((calc: Calculator) => 
+    calc.category.map((category: string) => `
   <url>
     <loc>${SITE_URL}/${category.toLowerCase()}/${calc.slug}</loc>
     ${calc.lastUpdated ? `<lastmod>${new Date(calc.lastUpdated).toISOString()}</lastmod>` : ''}
@@ -49,25 +65,12 @@ async function generateSitemap() {
   ).join('')}
 </urlset>`;
 
-    // Write sitemap to public directory using absolute path
-    const publicDir = join(process.cwd(), 'public');
-    const sitemapPath = join(publicDir, 'sitemap.xml');
-    
-    try {
-      writeFileSync(sitemapPath, sitemap);
-      console.log('✅ Sitemap generated successfully at:', sitemapPath);
-    } catch (writeError) {
-      console.error('Error writing sitemap file:', writeError);
-      throw writeError;
-    }
-
-    // Close MongoDB connection
-    await db.client.close();
-  } catch (error) {
-    console.error('Error generating sitemap:', error);
-    process.exit(1);
+    // Write sitemap to public directory
+    writeFileSync(join(process.cwd(), 'public', 'sitemap.xml'), sitemap);
+    console.log('Sitemap generated successfully');
+  } finally {
+    await client.close();
   }
 }
 
-// Execute the function
-generateSitemap(); 
+generateSitemap().catch(console.error); 
