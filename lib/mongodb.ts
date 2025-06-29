@@ -23,11 +23,11 @@ export async function connectToDatabase() {
 
   try {
     const client = await MongoClient.connect(uri, {
-      // Force TLS 1.2
-      ssl: true,
-      tls: true,
-      tlsAllowInvalidCertificates: false,
-      serverApi: { version: '1', strict: true, deprecationErrors: true }
+      serverApi: {
+        version: '1',
+        strict: true,
+        deprecationErrors: true
+      }
     });
 
     cachedClient = client;
