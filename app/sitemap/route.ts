@@ -10,10 +10,9 @@ interface Calculator {
 }
 
 function generateCalculatorUrl(category: string, slug: string, lastUpdated?: string): string {
-  return `
-  <url>
-    <loc>${SITE_URL}/${category.toLowerCase()}/${slug}</loc>
-    ${lastUpdated ? `<lastmod>${new Date(lastUpdated).toISOString()}</lastmod>` : ''}
+  return `<url>
+    <loc>${SITE_URL}/${category.toLowerCase()}/${slug}</loc>${lastUpdated ? `
+    <lastmod>${new Date(lastUpdated).toISOString()}</lastmod>` : ''}
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>`;
@@ -28,15 +27,11 @@ export async function GET() {
       .project({ slug: 1, category: 1, lastUpdated: 1 })
       .toArray() as Calculator[];
 
-    const staticUrls = `
-  <!-- Homepage -->
-  <url>
+    const staticUrls = `<url>
     <loc>${SITE_URL}</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
-
-  <!-- Static Pages -->
   <url>
     <loc>${SITE_URL}/terms</loc>
     <changefreq>monthly</changefreq>
@@ -59,19 +54,18 @@ export async function GET() {
           generateCalculatorUrl(category, calc.slug, calc.lastUpdated)
         )
       )
-      .join('');
+      .join('\n  ');
 
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   ${staticUrls}
-  
-  <!-- Calculator Pages -->
   ${calculatorUrls}
 </urlset>`;
 
     return new NextResponse(sitemap, {
       headers: {
         'Content-Type': 'application/xml',
+        'Cache-Control': 'public, max-age=3600, must-revalidate',
       },
     });
   } catch (error) {
