@@ -1,14 +1,20 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './CalculatorAdminForm.css';
 import './preview.css';
 import CalculatorPreview from './CalculatorPreview';
 import type { CalculatorPage } from '@/types/calculator';
+import { useForm, Controller, SubmitHandler } from 'react-hook-form';
+import dynamic from 'next/dynamic';
 
 interface Props {
   onSubmit: (data: CalculatorPage) => Promise<void>;
 }
+
+type NestedValue<T> = {
+  [K in keyof T]: T[K] extends object ? Partial<T[K]> : T[K];
+};
 
 function processPlainText(text: string): string {
   return text
@@ -28,32 +34,38 @@ function processHtmlContent(html: string): string {
   return processedContent.trim();
 }
 
-export default function CalculatorAdminForm({ onSubmit }: Props) {
-  const [formData, setFormData] = useState<CalculatorPage>({
+const defaultFormData: CalculatorPage = {
+  title: '',
+  slug: '',
+  category: [],
+  seo: {
     title: '',
-    slug: '',
-    category: [],
-    seo: {
-      title: '',
-      description: '',
-      ogTitle: '',
-      ogDescription: '',
-      twitterDescription: '',
-    },
-    shortIntro: '',
-    calculatorComponent: '',
-    descriptionHtml: '',
-    keywords: [],
-    internalLinkAnchors: [],
-    faqs: [],
-    externalLinks: [],
-    screenshot: {
-      imageUrl: '',
-      altText: '',
-    },
-    author: '',
-    lastUpdated: '',
-    customStructuredData: {},
+    description: '',
+    ogTitle: '',
+    ogDescription: '',
+    twitterDescription: '',
+  },
+  shortIntro: '',
+  calculatorComponent: '',
+  descriptionHtml: '',
+  keywords: [],
+  internalLinkAnchors: [],
+  faqs: [],
+  externalLinks: [],
+  screenshot: {
+    imageUrl: '',
+    altText: '',
+  },
+  author: '',
+  lastUpdated: '',
+  customStructuredData: {},
+};
+
+export default function CalculatorAdminForm({ onSubmit }: Props) {
+  const [formData, setFormData] = useState<CalculatorPage>(defaultFormData);
+  const [previewKey, setPreviewKey] = useState(0);
+  const { register, handleSubmit, control, formState: { errors } } = useForm<CalculatorPage>({
+    defaultValues: defaultFormData
   });
 
   // Input states for array fields
@@ -61,6 +73,32 @@ export default function CalculatorAdminForm({ onSubmit }: Props) {
   const [newInternalLink, setNewInternalLink] = useState('');
   const [newCategory, setNewCategory] = useState('');
   const [showPreview, setShowPreview] = useState(false);
+
+  const handleNestedChange = (parent: keyof CalculatorPage, field: string, value: any) => {
+    setFormData(prev => {
+      const parentObj = prev[parent];
+      if (typeof parentObj === 'object' && parentObj !== null) {
+        return {
+          ...prev,
+          [parent]: {
+            ...parentObj,
+            [field]: value
+          }
+        } as CalculatorPage;
+      }
+      return prev;
+    });
+  };
+
+  const handleCustomStructuredDataChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    try {
+      const parsed = JSON.parse(e.target.value);
+      setFormData(prev => ({ ...prev, customStructuredData: parsed }));
+    } catch (error) {
+      // If invalid JSON, store as empty object
+      setFormData(prev => ({ ...prev, customStructuredData: {} }));
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -77,15 +115,9 @@ export default function CalculatorAdminForm({ onSubmit }: Props) {
 
     if (name.includes('.')) {
       const [parent, child] = name.split('.');
-      setFormData(prev => ({
-        ...prev,
-        [parent]: {
-          ...prev[parent as keyof CalculatorPage],
-          [child]: processedValue,
-        },
-      }));
+      handleNestedChange(parent as keyof CalculatorPage, child, processedValue);
     } else {
-      setFormData(prev => ({ ...prev, [name]: processedValue }));
+      handleNestedChange(name as keyof CalculatorPage, name, processedValue);
     }
   };
 
@@ -161,17 +193,12 @@ export default function CalculatorAdminForm({ onSubmit }: Props) {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Process HTML content one final time before submission
-    const processedData = {
-      ...formData,
-      calculatorComponent: processHtmlContent(formData.calculatorComponent),
-      descriptionHtml: processHtmlContent(formData.descriptionHtml),
-    };
-    
-    await onSubmit(processedData);
+  const handleFormSubmit: SubmitHandler<CalculatorPage> = async (data) => {
+    try {
+      await onSubmit(data);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
   };
 
   const PreviewModal = () => {
@@ -284,7 +311,7 @@ export default function CalculatorAdminForm({ onSubmit }: Props) {
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-lg shadow">
+      <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6 bg-white p-6 rounded-lg shadow">
         <div className="space-y-4">
           <h2 className="text-xl font-semibold">Basic Information</h2>
           
@@ -629,15 +656,7 @@ export default function CalculatorAdminForm({ onSubmit }: Props) {
             <textarea
               name="customStructuredData"
               value={formData.customStructuredData ? JSON.stringify(formData.customStructuredData, null, 2) : ''}
-              onChange={(e) => {
-                try {
-                  const parsed = JSON.parse(e.target.value);
-                  setFormData(prev => ({ ...prev, customStructuredData: parsed }));
-                } catch {
-                  // If JSON is invalid, store as string
-                  setFormData(prev => ({ ...prev, customStructuredData: e.target.value }));
-                }
-              }}
+              onChange={handleCustomStructuredDataChange}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 font-mono"
               placeholder="{}"
             />
