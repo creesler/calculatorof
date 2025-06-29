@@ -15,6 +15,35 @@ export const metadata: Metadata = {
     shortcut: '/icons/favicon-16x16.png',
   },
   manifest: '/icons/site.webmanifest',
+  viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
+  themeColor: '#ffffff',
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://calculatorof.com',
+    siteName: 'CalculatorOf',
+    title: 'CalculatorOf - Free Online Calculators',
+    description: 'Free online calculators for all your needs',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'CalculatorOf - Free Online Calculators',
+    description: 'Free online calculators for all your needs',
+  },
+  alternates: {
+    canonical: 'https://calculatorof.com'
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 }
 
 export default function RootLayout({
