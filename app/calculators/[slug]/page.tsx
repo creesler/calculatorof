@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: calculator.seo.ogTitle || calculator.seo.title,
       description: calculator.seo.ogDescription || calculator.seo.description,
       type: 'article',
-      url: `https://calculator.of/calculators/${calculator.slug}`,
+      url: `https://calculatorof.com/calculators/${calculator.slug}`,
     },
     twitter: {
       card: 'summary_large_image',

@@ -67,7 +67,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: calculator.seo.ogTitle || calculator.seo.title,
       description: calculator.seo.ogDescription || calculator.seo.description,
       type: 'article',
-      url: `https://calculator.of/${params.category}/${calculator.slug}`,
+      url: `https://calculatorof.com/${params.category}/${calculator.slug}`,
     },
     twitter: {
       card: 'summary_large_image',
@@ -123,7 +123,7 @@ export default async function CalculatorPage({ params }: Props) {
               {calculator.title}
             </h1>
             <ShareButtonsWrapper 
-              url={`https://calculator.of/${params.category}/${params.slug}`}
+              url={`https://calculatorof.com/${params.category}/${params.slug}`}
               title={calculator.title}
             />
             <p className="text-xl text-gray-600">
