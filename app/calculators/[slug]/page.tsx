@@ -4,6 +4,8 @@ import { connectToDatabase } from '@/lib/mongodb';
 import type { CalculatorPage } from '@/types/calculator';
 import ShareButtonsWrapper from '@/app/components/ShareButtonsWrapper';
 
+export const revalidate = 0;
+
 interface Props {
   params: {
     slug: string;
@@ -127,76 +129,11 @@ export default async function CalculatorPage({ params }: Props) {
             <div 
               dangerouslySetInnerHTML={{ 
                 __html: `<p>${formattedDescription}</p>`
-              }} 
+              }}
             />
           </section>
-
-          {/* FAQs */}
-          {calculator.faqs.length > 0 && (
-            <section className="mb-12">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                Frequently Asked Questions
-              </h2>
-              <div className="space-y-6">
-                {calculator.faqs.map((faq, index) => (
-                  <div key={index} className="bg-gray-50 rounded-lg p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                      {formatText(faq.question)}
-                    </h3>
-                    <div className="text-gray-600">
-                      {formatText(faq.answer).split(/\\n|\n/).map((line, i) => (
-                        <p key={i} className="mb-2">{line.trim()}</p>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
-
-          {/* External Links */}
-          {calculator.externalLinks.length > 0 && (
-            <section className="mb-12">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                References
-              </h2>
-              <ul className="space-y-2">
-                {calculator.externalLinks.map((link, index) => (
-                  <li key={index}>
-                    <a
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:text-blue-800"
-                    >
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
-
-          {/* Screenshot */}
-          <section>
-            <img
-              src={calculator.screenshot.imageUrl}
-              alt={calculator.screenshot.altText}
-              className="rounded-lg shadow-lg w-full"
-            />
-          </section>
-
-          {/* Metadata */}
-          <footer className="mt-12 text-sm text-gray-500">
-            {calculator.author && (
-              <p>Written by {calculator.author}</p>
-            )}
-            {calculator.lastUpdated && (
-              <p>Last updated: {new Date(calculator.lastUpdated).toLocaleDateString()}</p>
-            )}
-          </footer>
         </div>
       </article>
     </>
   );
-} 
+}

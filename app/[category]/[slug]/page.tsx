@@ -16,6 +16,8 @@ interface CalculatorWithCategory {
   category: string[];
 }
 
+export const revalidate = 0;
+
 export async function generateStaticParams() {
   const { db } = await connectToDatabase();
   const calculators = await db

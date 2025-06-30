@@ -20,6 +20,8 @@ export const metadata: Metadata = {
   },
 };
 
+export const revalidate = 0;
+
 type CalculatorWithCategory = Pick<CalculatorPage, 'title' | 'slug' | 'shortIntro' | 'seo' | 'category'>;
 
 // Helper function to serialize MongoDB documents

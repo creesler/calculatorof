@@ -200,7 +200,14 @@ export default function CalculatorAdminForm({ onSubmit }: Props) {
 
   const handleFormSubmit: SubmitHandler<CalculatorPage> = async (data) => {
     try {
-      await onSubmit(data);
+      // Merge the form data with our state data
+      const mergedData = {
+        ...data,
+        ...formData,
+        title: formData.title, // Ensure we use the latest title from our state
+        slug: formData.slug, // Ensure we use the latest slug from our state
+      };
+      await onSubmit(mergedData);
     } catch (error) {
       console.error('Error submitting form:', error);
     }
@@ -324,19 +331,20 @@ export default function CalculatorAdminForm({ onSubmit }: Props) {
             <label className="block text-sm font-medium text-gray-700">Title</label>
             <input
               type="text"
-              name="title"
+              {...register("title", { required: true })}
               value={formData.title}
               onChange={handleInputChange}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               required
             />
+            {errors.title && <span className="text-red-500 text-sm">Title is required</span>}
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700">Slug</label>
             <input
               type="text"
-              name="slug"
+              {...register("slug", { required: true })}
               value={formData.slug}
               onChange={handleInputChange}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
