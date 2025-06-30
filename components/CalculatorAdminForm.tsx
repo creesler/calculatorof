@@ -114,10 +114,15 @@ export default function CalculatorAdminForm({ onSubmit }: Props) {
     }
 
     if (name.includes('.')) {
+      // Handle nested fields (like seo.title)
       const [parent, child] = name.split('.');
       handleNestedChange(parent as keyof CalculatorPage, child, processedValue);
     } else {
-      handleNestedChange(name as keyof CalculatorPage, name, processedValue);
+      // Handle non-nested fields directly
+      setFormData(prev => ({
+        ...prev,
+        [name]: processedValue
+      }));
     }
   };
 
@@ -450,7 +455,7 @@ export default function CalculatorAdminForm({ onSubmit }: Props) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Calculator Component</label>
+            <label className="block text-sm font-medium text-gray-700">Calculator Component (HTML)</label>
             <textarea
               name="calculatorComponent"
               value={formData.calculatorComponent}
@@ -463,7 +468,7 @@ export default function CalculatorAdminForm({ onSubmit }: Props) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Description HTML</label>
+            <label className="block text-sm font-medium text-gray-700">Description (HTML)</label>
             <textarea
               name="descriptionHtml"
               value={formData.descriptionHtml}
