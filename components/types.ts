@@ -20,4 +20,5 @@ export interface CalculatorPage {
   author?: string;
   lastUpdated?: string;
   customStructuredData?: Record<string, any>;
+  _customStructuredDataRaw?: string;
 } 
