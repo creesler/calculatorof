@@ -91,12 +91,23 @@ export default function CalculatorAdminForm({ onSubmit }: Props) {
   };
 
   const handleCustomStructuredDataChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    // Store the raw value while typing
+    const { value } = e.target;
+    setFormData(prev => ({ 
+      ...prev, 
+      customStructuredData: prev.customStructuredData,
+      _customStructuredDataRaw: value // Temporarily store raw value
+    }));
+  };
+
+  const handleCustomStructuredDataBlur = (e: React.FocusEvent<HTMLTextAreaElement>) => {
+    const { value } = e.target;
     try {
-      const parsed = JSON.parse(e.target.value);
+      const parsed = JSON.parse(value);
       setFormData(prev => ({ ...prev, customStructuredData: parsed }));
     } catch (error) {
-      // If invalid JSON, store as empty object
-      setFormData(prev => ({ ...prev, customStructuredData: {} }));
+      // If invalid JSON, keep the previous valid JSON
+      console.warn('Invalid JSON in Custom Structured Data');
     }
   };
 
@@ -182,6 +193,13 @@ export default function CalculatorAdminForm({ onSubmit }: Props) {
     }));
   };
 
+  const removeFaq = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      faqs: prev.faqs.filter((_, i) => i !== index),
+    }));
+  };
+
   const handleExternalLinkChange = (index: number, field: 'label' | 'url', value: string) => {
     setFormData(prev => ({
       ...prev,
@@ -195,6 +213,13 @@ export default function CalculatorAdminForm({ onSubmit }: Props) {
     setFormData(prev => ({
       ...prev,
       externalLinks: [...prev.externalLinks, { label: '', url: '' }],
+    }));
+  };
+
+  const removeExternalLink = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      externalLinks: prev.externalLinks.filter((_, i) => i !== index),
     }));
   };
 
@@ -562,7 +587,15 @@ export default function CalculatorAdminForm({ onSubmit }: Props) {
         <div className="space-y-4">
           <h2 className="text-xl font-semibold">FAQs</h2>
           {formData.faqs.map((faq, index) => (
-            <div key={index} className="space-y-2">
+            <div key={index} className="space-y-2 relative bg-gray-50 p-4 rounded-lg">
+              <button
+                type="button"
+                onClick={() => removeFaq(index)}
+                className="absolute top-2 right-2 text-red-600 hover:text-red-800"
+                title="Delete FAQ"
+              >
+                ×
+              </button>
               <input
                 type="text"
                 value={faq.question}
@@ -590,7 +623,15 @@ export default function CalculatorAdminForm({ onSubmit }: Props) {
         <div className="space-y-4">
           <h2 className="text-xl font-semibold">External Links</h2>
           {formData.externalLinks.map((link, index) => (
-            <div key={index} className="space-y-2">
+            <div key={index} className="space-y-2 relative bg-gray-50 p-4 rounded-lg">
+              <button
+                type="button"
+                onClick={() => removeExternalLink(index)}
+                className="absolute top-2 right-2 text-red-600 hover:text-red-800"
+                title="Delete External Link"
+              >
+                ×
+              </button>
               <input
                 type="text"
                 value={link.label}
@@ -668,11 +709,13 @@ export default function CalculatorAdminForm({ onSubmit }: Props) {
             <label className="block text-sm font-medium text-gray-700">Custom Structured Data (JSON)</label>
             <textarea
               name="customStructuredData"
-              value={formData.customStructuredData ? JSON.stringify(formData.customStructuredData, null, 2) : ''}
+              value={formData._customStructuredDataRaw || (formData.customStructuredData ? JSON.stringify(formData.customStructuredData, null, 2) : '')}
               onChange={handleCustomStructuredDataChange}
+              onBlur={handleCustomStructuredDataBlur}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 font-mono"
               placeholder="{}"
             />
+            <p className="mt-1 text-sm text-gray-500">Enter valid JSON for additional schema.org structured data. Will only save when valid JSON is entered.</p>
           </div>
         </div>
 
