@@ -9,6 +9,7 @@ import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import dynamic from 'next/dynamic';
 
 interface Props {
+  categories: string[];
   onSubmit: (data: CalculatorPage) => Promise<void>;
 }
 
@@ -61,9 +62,11 @@ const defaultFormData: CalculatorPage = {
   customStructuredData: {},
 };
 
-export default function CalculatorAdminForm({ onSubmit }: Props) {
+export default function CalculatorAdminForm({ categories, onSubmit }: Props) {
   const [formData, setFormData] = useState<CalculatorPage>(defaultFormData);
   const [previewKey, setPreviewKey] = useState(0);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
   const { register, handleSubmit, control, formState: { errors } } = useForm<CalculatorPage>({
     defaultValues: defaultFormData
   });
@@ -73,6 +76,19 @@ export default function CalculatorAdminForm({ onSubmit }: Props) {
   const [newInternalLink, setNewInternalLink] = useState('');
   const [newCategory, setNewCategory] = useState('');
   const [showPreview, setShowPreview] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('');
+
+  const capitalizeFirstLetter = (str: string) => {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  };
+
+  const handleCategorySelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    if (value && !formData.category.some(cat => cat.toLowerCase() === value.toLowerCase())) {
+      handleAddItem('category', value);
+    }
+    setSelectedCategory('');
+  };
 
   const handleNestedChange = (parent: keyof CalculatorPage, field: string, value: any) => {
     setFormData(prev => {
@@ -139,9 +155,23 @@ export default function CalculatorAdminForm({ onSubmit }: Props) {
 
   const handleAddItem = (field: 'keywords' | 'internalLinkAnchors' | 'category', value: string) => {
     if (value.trim()) {
+      let processedValue = value.trim();
+      
+      // Special handling for categories
+      if (field === 'category') {
+        processedValue = capitalizeFirstLetter(processedValue);
+        // Check for case-insensitive duplicates
+        const isDuplicate = formData[field]?.some(
+          item => item.toLowerCase() === processedValue.toLowerCase()
+        );
+        if (isDuplicate) {
+          return;
+        }
+      }
+
       setFormData(prev => ({
         ...prev,
-        [field]: [...(prev[field] || []), value.trim()],
+        [field]: [...(prev[field] || []), processedValue],
       }));
 
       // Reset the corresponding input
@@ -225,6 +255,9 @@ export default function CalculatorAdminForm({ onSubmit }: Props) {
 
   const handleFormSubmit: SubmitHandler<CalculatorPage> = async (data) => {
     try {
+      setSubmitStatus('loading');
+      setErrorMessage('');
+      
       // Merge the form data with our state data
       const mergedData = {
         ...data,
@@ -232,9 +265,24 @@ export default function CalculatorAdminForm({ onSubmit }: Props) {
         title: formData.title, // Ensure we use the latest title from our state
         slug: formData.slug, // Ensure we use the latest slug from our state
       };
+      
       await onSubmit(mergedData);
+      setSubmitStatus('success');
+      
+      // Reset form after successful submission
+      setFormData(defaultFormData);
+      setNewKeyword('');
+      setNewInternalLink('');
+      setNewCategory('');
+      setSelectedCategory('');
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        setSubmitStatus('idle');
+      }, 3000);
     } catch (error) {
-      console.error('Error submitting form:', error);
+      setErrorMessage(error instanceof Error ? error.message : 'An error occurred');
+      setSubmitStatus('error');
     }
   };
 
@@ -379,14 +427,32 @@ export default function CalculatorAdminForm({ onSubmit }: Props) {
 
           <div>
             <label className="block text-sm font-medium text-gray-700">Categories</label>
+            
+            {/* Category Dropdown */}
             <div className="flex gap-2 mt-1">
+              <select
+                value={selectedCategory}
+                onChange={handleCategorySelect}
+                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              >
+                <option value="">Select a category</option>
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Manual Category Input */}
+            <div className="flex gap-2 mt-2">
               <input
                 type="text"
                 value={newCategory}
                 onChange={(e) => setNewCategory(e.target.value)}
                 onKeyPress={(e) => handleKeyPress(e, 'category', newCategory)}
                 className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                placeholder="Add a category"
+                placeholder="Or add a new category"
               />
               <button
                 type="button"
@@ -396,6 +462,8 @@ export default function CalculatorAdminForm({ onSubmit }: Props) {
                 Add
               </button>
             </div>
+
+            {/* Selected Categories */}
             <div className="mt-2 flex flex-wrap gap-2">
               {formData.category.map((item, index) => (
                 <span key={index} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-700">
@@ -719,24 +787,40 @@ export default function CalculatorAdminForm({ onSubmit }: Props) {
           </div>
         </div>
 
-        <div className="flex gap-4">
-          <button
-            type="button"
-            onClick={() => setShowPreview(true)}
-            className="flex-1 py-2 px-4 border border-blue-600 rounded-md shadow-sm text-sm font-medium text-blue-600 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
-            Preview
-          </button>
+        {/* Form buttons */}
+        <div className="mt-8 flex gap-4">
           <button
             type="submit"
-            className="flex-1 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             Create Calculator
           </button>
+          <button
+            type="button"
+            onClick={() => setShowPreview(true)}
+            className="px-6 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+          >
+            Preview
+          </button>
         </div>
-      </form>
 
-      <PreviewModal />
+        {/* Status Messages */}
+        {submitStatus === 'success' && (
+          <div className="mt-4 p-4 bg-green-100 text-green-700 rounded">
+            Calculator created successfully!
+          </div>
+        )}
+        
+        {submitStatus === 'error' && (
+          <div className="mt-4 p-4 bg-red-100 text-red-700 rounded">
+            Error: {errorMessage}
+          </div>
+        )}
+
+        {showPreview && (
+          <PreviewModal />
+        )}
+      </form>
     </>
   );
 } 
