@@ -21,23 +21,11 @@ export async function connectToDatabase() {
     };
   }
 
-  try {
-    const client = await MongoClient.connect(uri, {
-      serverApi: {
-        version: '1',
-        strict: true,
-        deprecationErrors: true
-      }
-    });
+  const client = await MongoClient.connect(uri);
+  cachedClient = client;
 
-    cachedClient = client;
-
-    return {
-      client: cachedClient,
-      db: cachedClient.db(dbName)
-    };
-  } catch (error) {
-    console.error('MongoDB connection error:', error);
-    throw error;
-  }
+  return {
+    client: cachedClient,
+    db: cachedClient.db(dbName)
+  };
 } 
