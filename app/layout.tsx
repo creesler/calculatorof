@@ -17,6 +17,9 @@ export const metadata: Metadata = {
   manifest: '/icons/site.webmanifest',
   viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
   themeColor: '#ffffff',
+  other: {
+    'p:domain_verify': 'effa7cef91f54b14d6cb2f60811cb16e',
+  },
   openGraph: {
     type: 'website',
     locale: 'en_US',
