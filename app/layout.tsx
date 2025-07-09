@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import FloatingHomeButton from './components/FloatingHomeButton'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -61,6 +62,7 @@ export default function RootLayout({
           <Navbar />
           <main className="flex-grow">{children}</main>
           <Footer />
+          <FloatingHomeButton />
         </div>
       </body>
     </html>

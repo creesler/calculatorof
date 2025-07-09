@@ -13,7 +13,7 @@ async function getCategories() {
         const processedCat = cat.charAt(0).toUpperCase() + cat.slice(1).toLowerCase();
         if (!acc.some(existing => existing.toLowerCase() === processedCat.toLowerCase())) {
           acc.push(processedCat);
-        }
+      }
       });
     }
     return acc;
