@@ -2,6 +2,11 @@
 const nextConfig = {
   reactStrictMode: true,
   async headers() {
+    // Only apply security headers in production
+    if (process.env.NODE_ENV !== 'production') {
+      return [];
+    }
+
     return [
       {
         source: '/:path*',
@@ -27,6 +32,11 @@ const nextConfig = {
     ];
   },
   async redirects() {
+    // Only apply redirects in production
+    if (process.env.NODE_ENV !== 'production') {
+      return [];
+    }
+
     return [
       // Redirect www to non-www
       {

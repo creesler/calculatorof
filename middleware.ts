@@ -6,9 +6,10 @@ export function middleware(request: NextRequest) {
   const hostname = request.headers.get('host') || '';
   const isWWW = hostname.startsWith('www.');
   const isHTTPS = request.headers.get('x-forwarded-proto') === 'https';
+  const isDevelopment = process.env.NODE_ENV === 'development';
 
-  // Handle www to non-www and HTTP to HTTPS redirects
-  if (isWWW || !isHTTPS) {
+  // Only enforce HTTPS and www redirects in production
+  if (!isDevelopment && (isWWW || !isHTTPS)) {
     const newHostname = isWWW ? hostname.replace('www.', '') : hostname;
     return NextResponse.redirect(
       `https://${newHostname}${url.pathname}${url.search}`,
