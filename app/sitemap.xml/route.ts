@@ -44,6 +44,22 @@ export async function GET() {
     },
   ];
 
+  // Get unique categories
+  const categoriesMap: { [key: string]: boolean } = {};
+  calculators.forEach((calc) => {
+    calc.category.forEach(cat => {
+      categoriesMap[cat.toLowerCase()] = true;
+    });
+  });
+
+  // Category routes
+  const categoryRoutes = Object.keys(categoriesMap).map(category => ({
+    url: `https://calculatorof.com/${category.toLowerCase()}`,
+    lastmod: new Date().toISOString(),
+    changefreq: 'daily' as ChangeFreq,
+    priority: 0.9,
+  }));
+
   // Calculator routes
   const calculatorRoutes = calculators.flatMap((calc: Calculator) =>
     calc.category.map((category: string) => ({
@@ -57,7 +73,7 @@ export async function GET() {
   // Generate XML
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-      ${[...routes, ...calculatorRoutes]
+      ${[...routes, ...categoryRoutes, ...calculatorRoutes]
         .map(
           (route) => `
         <url>
@@ -74,7 +90,8 @@ export async function GET() {
   return new Response(sitemap, {
     headers: {
       'Content-Type': 'application/xml',
-      'Cache-Control': 'public, max-age=3600, s-maxage=3600',
+      // No caching - always generate fresh sitemap
+      'Cache-Control': 'no-store, max-age=0',
     },
   });
 } 
