@@ -7,8 +7,6 @@ interface Calculator {
   lastUpdated?: string;
 }
 
-type ChangeFrequency = 'daily' | 'weekly' | 'monthly' | 'yearly' | 'always' | 'hourly' | 'never';
-
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const { db } = await connectToDatabase();
   const calculators = await db
@@ -22,25 +20,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     {
       url: 'https://calculatorof.com',
       lastModified: new Date(),
-      changeFrequency: 'daily' as ChangeFrequency,
+      changeFrequency: 'daily',
       priority: 1,
     },
     {
       url: 'https://calculatorof.com/terms',
       lastModified: new Date(),
-      changeFrequency: 'monthly' as ChangeFrequency,
+      changeFrequency: 'monthly',
       priority: 0.3,
     },
     {
       url: 'https://calculatorof.com/privacy-policy',
       lastModified: new Date(),
-      changeFrequency: 'monthly' as ChangeFrequency,
+      changeFrequency: 'monthly',
       priority: 0.3,
     },
     {
       url: 'https://calculatorof.com/contact',
       lastModified: new Date(),
-      changeFrequency: 'monthly' as ChangeFrequency,
+      changeFrequency: 'monthly',
       priority: 0.3,
     },
   ];
@@ -57,7 +55,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const categoryRoutes = Object.keys(categoriesMap).map(category => ({
     url: `https://calculatorof.com/${category.toLowerCase()}`,
     lastModified: new Date(),
-    changeFrequency: 'daily' as ChangeFrequency,
+    changeFrequency: 'daily',
     priority: 0.9,
   }));
 
@@ -66,7 +64,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     calc.category.map((category: string) => ({
       url: `https://calculatorof.com/${category.toLowerCase()}/${calc.slug}`,
       lastModified: calc.lastUpdated ? new Date(calc.lastUpdated) : new Date(),
-      changeFrequency: 'weekly' as ChangeFrequency,
+      changeFrequency: 'weekly',
       priority: 0.8,
     }))
   );
