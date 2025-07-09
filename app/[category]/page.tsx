@@ -36,11 +36,14 @@ export async function generateStaticParams() {
     .toArray();
 
   // Extract and deduplicate all categories
-  const categories = [...new Set(
-    calculators.flatMap((calc: { category: string[] }) => 
-      calc.category.map(cat => cat.toLowerCase())
-    )
-  )];
+  const categoriesMap: { [key: string]: boolean } = {};
+  calculators.forEach((calc: { category: string[] }) => {
+    calc.category.forEach(cat => {
+      categoriesMap[cat.toLowerCase()] = true;
+    });
+  });
+
+  const categories = Object.keys(categoriesMap);
 
   return categories.map(category => ({
     category,
