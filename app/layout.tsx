@@ -10,6 +10,10 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'CalculatorOf - Free Online Calculators',
   description: 'Free online calculators for all your needs',
+  metadataBase: new URL('https://calculatorof.com'),
+  alternates: {
+    canonical: '/',
+  },
   icons: {
     icon: '/icons/favicon.ico',
     apple: '/icons/apple-touch-icon.png',
@@ -33,9 +37,6 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'CalculatorOf - Free Online Calculators',
     description: 'Free online calculators for all your needs',
-  },
-  alternates: {
-    canonical: 'https://calculatorof.com'
   },
   robots: {
     index: true,
