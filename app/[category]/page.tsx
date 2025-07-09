@@ -24,6 +24,11 @@ interface CalculatorWithCategory {
   };
 }
 
+interface CalculatorDocument {
+  category: string[];
+  [key: string]: any;
+}
+
 export const revalidate = 0;
 
 // Generate static params for all categories
@@ -33,11 +38,11 @@ export async function generateStaticParams() {
     .collection('calculators')
     .find({})
     .project({ category: 1 })
-    .toArray();
+    .toArray() as CalculatorDocument[];
 
   // Extract and deduplicate all categories
   const categoriesMap: { [key: string]: boolean } = {};
-  calculators.forEach((calc: { category: string[] }) => {
+  calculators.forEach((calc) => {
     calc.category.forEach(cat => {
       categoriesMap[cat.toLowerCase()] = true;
     });
