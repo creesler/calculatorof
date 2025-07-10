@@ -2,40 +2,37 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  const url = request.nextUrl.clone();
-  const hostname = request.headers.get('host') || '';
-  const isWWW = hostname.startsWith('www.');
-  const isHTTPS = request.headers.get('x-forwarded-proto') === 'https';
-  const isDevelopment = process.env.NODE_ENV === 'development';
+  const url = request.nextUrl;
+  let response = NextResponse.next();
 
-  // Only enforce HTTPS and www redirects in production
-  if (!isDevelopment && (isWWW || !isHTTPS)) {
-    const newHostname = isWWW ? hostname.replace('www.', '') : hostname;
-    return NextResponse.redirect(
-      `https://${newHostname}${url.pathname}${url.search}`,
-      { status: 301 }
-    );
+  // Handle canonical URL redirects
+  if (
+    url.protocol === 'http:' || // Redirect HTTP to HTTPS
+    url.host.startsWith('www.') // Redirect www to non-www
+  ) {
+    const newUrl = new URL(url.pathname + url.search, `https://calculatorof.com`);
+    return NextResponse.redirect(newUrl, { status: 301 });
   }
 
   // Check if the request is for admin routes
-  if (request.nextUrl.pathname.startsWith('/admin') || 
-      request.nextUrl.pathname.startsWith('/api/create-calculator')) {
+  if (url.pathname.startsWith('/admin') || 
+      url.pathname.startsWith('/api/create-calculator')) {
     
     const isAuthenticated = request.cookies.get('admin_authenticated')?.value === 'true';
     
     // If not authenticated and not trying to authenticate
-    if (!isAuthenticated && request.nextUrl.pathname !== '/admin/login') {
+    if (!isAuthenticated && url.pathname !== '/admin/login') {
       // Redirect to login
       return NextResponse.redirect(new URL('/admin/login', request.url));
     }
   }
 
-  return NextResponse.next();
+  return response;
 }
 
 export const config = {
   matcher: [
-    '/((?!api/|_next/|_static/|_vercel|[\\w-]+\\.\\w+).*)',
+    '/((?!_next/static|_next/image|favicon.ico).*)',
     '/admin/:path*',
     '/api/create-calculator'
   ]
