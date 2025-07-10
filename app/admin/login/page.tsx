@@ -1,13 +1,14 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +27,9 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (response.ok) {
-        router.push('/admin');
+        // Get the redirect URL from query params or default to /admin
+        const redirectTo = searchParams.get('redirect') || '/admin';
+        router.push(redirectTo);
         router.refresh();
       } else {
         setError(data.error || 'Authentication failed');
@@ -37,6 +40,11 @@ export default function LoginPage() {
       setIsLoading(false);
     }
   };
+
+  // Clear error when redirect param changes
+  useEffect(() => {
+    setError('');
+  }, [searchParams]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">

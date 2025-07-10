@@ -10,6 +10,10 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'CalculatorOf - Free Online Calculators',
   description: 'Free online calculators for all your needs',
+  metadataBase: new URL('https://calculatorof.com'),
+  alternates: {
+    canonical: '/',
+  },
   icons: {
     icon: '/icons/favicon.ico',
     apple: '/icons/apple-touch-icon.png',
@@ -18,6 +22,9 @@ export const metadata: Metadata = {
   manifest: '/icons/site.webmanifest',
   viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
   themeColor: '#ffffff',
+  other: {
+    'p:domain_verify': 'effa7cef91f54b14d6cb2f60811cb16e',
+  },
   openGraph: {
     type: 'website',
     locale: 'en_US',
@@ -30,9 +37,6 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'CalculatorOf - Free Online Calculators',
     description: 'Free online calculators for all your needs',
-  },
-  alternates: {
-    canonical: 'https://calculatorof.com'
   },
   robots: {
     index: true,
