@@ -16,7 +16,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .toArray() as Calculator[];
 
   // Static routes
-  const routes = [
+  const routes: MetadataRoute.Sitemap = [
     {
       url: 'https://calculatorof.com',
       lastModified: new Date(),
@@ -52,7 +52,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   });
 
   // Category routes
-  const categoryRoutes = Object.keys(categoriesMap).map(category => ({
+  const categoryRoutes: MetadataRoute.Sitemap = Object.keys(categoriesMap).map(category => ({
     url: `https://calculatorof.com/${category.toLowerCase()}`,
     lastModified: new Date(),
     changeFrequency: 'daily',
@@ -60,7 +60,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   // Calculator routes
-  const calculatorRoutes = calculators.flatMap((calc: Calculator) =>
+  const calculatorRoutes: MetadataRoute.Sitemap = calculators.flatMap((calc: Calculator) =>
     calc.category.map((category: string) => ({
       url: `https://calculatorof.com/${category.toLowerCase()}/${calc.slug}`,
       lastModified: calc.lastUpdated ? new Date(calc.lastUpdated) : new Date(),
