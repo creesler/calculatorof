@@ -5,16 +5,16 @@ export function middleware(request: NextRequest) {
   // Get the pathname
   const pathname = request.nextUrl.pathname;
 
-  // Prevent redirect loops by checking if we're already on the login page
+  // Always allow access to the login page to prevent redirect loops
   if (pathname === '/admin/login') {
     return NextResponse.next();
   }
 
-  // Check if the request is for admin routes
-  if (pathname.startsWith('/admin') || pathname.startsWith('/api/create-calculator')) {
+  // Check if the request is for protected routes (admin or protected API routes)
+  if (pathname.startsWith('/admin') || pathname === '/api/create-calculator') {
     const isAuthenticated = request.cookies.get('admin_authenticated')?.value === 'true';
     
-    // If not authenticated, redirect to login
+    // If not authenticated and trying to access protected routes, redirect to login
     if (!isAuthenticated) {
       const loginUrl = new URL('/admin/login', request.url);
       // Add the original URL as a redirect parameter
@@ -23,9 +23,14 @@ export function middleware(request: NextRequest) {
     }
   }
 
+  // Allow all other routes to pass through
   return NextResponse.next();
 }
 
+// Define specific paths that need middleware processing
 export const config = {
-  matcher: ['/admin/:path*', '/api/create-calculator']
+  matcher: [
+    '/admin/:path*',
+    '/api/create-calculator'
+  ]
 }; 
