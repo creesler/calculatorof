@@ -1,17 +1,4 @@
 {
-  "redirects": [
-    {
-      "source": "/:path*",
-      "has": [
-        {
-          "type": "host",
-          "value": "calculatorof.com"
-        }
-      ],
-      "permanent": true,
-      "destination": "https://www.calculatorof.com/:path*"
-    }
-  ],
   "headers": [
     {
       "source": "/:path*",
