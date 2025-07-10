@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 
 export async function POST(request: Request) {
   try {
@@ -13,15 +14,23 @@ export async function POST(request: Request) {
     }
 
     if (password === adminPassword) {
-      // In a production environment, you might want to use a proper session management system
-      // For now, we'll use a simple cookie-based approach
       const response = NextResponse.json({ success: true });
-      response.cookies.set('admin_authenticated', 'true', {
+      
+      // Get the request URL to determine the domain
+      const requestUrl = new URL(request.url);
+      const domain = requestUrl.hostname;
+      
+      // Set domain only for production domain, not for preview URLs
+      const cookieOptions = {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        maxAge: 60 * 60 * 24 // 24 hours
-      });
+        sameSite: 'lax' as const,
+        maxAge: 60 * 60 * 24, // 24 hours
+        // Only set domain for the main domain, not for preview URLs
+        ...(domain === 'calculatorof.com' ? { domain: '.calculatorof.com' } : {})
+      };
+
+      response.cookies.set('admin_authenticated', 'true', cookieOptions);
       return response;
     }
 
@@ -30,6 +39,7 @@ export async function POST(request: Request) {
       { status: 401 }
     );
   } catch (error) {
+    console.error('Auth error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

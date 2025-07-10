@@ -2,8 +2,9 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  // Get the pathname
+  // Get the pathname and hostname
   const pathname = request.nextUrl.pathname;
+  const hostname = request.headers.get('host') || '';
 
   // Always allow access to the login page to prevent redirect loops
   if (pathname === '/admin/login') {
@@ -16,7 +17,9 @@ export function middleware(request: NextRequest) {
     
     // If not authenticated and trying to access protected routes, redirect to login
     if (!isAuthenticated) {
-      const loginUrl = new URL('/admin/login', request.url);
+      // Construct login URL using the same protocol and host as the request
+      const protocol = request.nextUrl.protocol;
+      const loginUrl = new URL('/admin/login', `${protocol}//${hostname}`);
       // Add the original URL as a redirect parameter
       loginUrl.searchParams.set('redirect', pathname);
       return NextResponse.redirect(loginUrl);
