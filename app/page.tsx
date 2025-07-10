@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     title: 'Calculator.of - Free Online Calculators',
     description: 'Collection of free online calculators for various purposes. Easy to use, accurate, and always free.',
     type: 'website',
-    url: 'https://calculator.of',
+    url: 'https://calculatorof.com',
   },
   twitter: {
     card: 'summary_large_image',

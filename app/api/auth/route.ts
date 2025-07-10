@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
+import { headers } from 'next/headers';
 
 export async function POST(request: Request) {
   try {
@@ -16,18 +16,19 @@ export async function POST(request: Request) {
     if (password === adminPassword) {
       const response = NextResponse.json({ success: true });
       
-      // Get the request URL to determine the domain
-      const requestUrl = new URL(request.url);
-      const domain = requestUrl.hostname;
+      // Get the hostname from headers
+      const headersList = headers();
+      const hostname = headersList.get('host') || '';
       
-      // Set domain only for production domain, not for preview URLs
+      // Set cookie options consistently
       const cookieOptions = {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax' as const,
         maxAge: 60 * 60 * 24, // 24 hours
+        path: '/',
         // Only set domain for the main domain, not for preview URLs
-        ...(domain === 'calculatorof.com' ? { domain: '.calculatorof.com' } : {})
+        ...(hostname === 'calculatorof.com' ? { domain: '.calculatorof.com' } : {})
       };
 
       response.cookies.set('admin_authenticated', 'true', cookieOptions);
