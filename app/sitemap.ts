@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next';
 import { connectToDatabase } from '@/lib/mongodb';
 
+// This sitemap is generated at build time and uses MongoDB to fetch calculator data
 interface Calculator {
   slug: string;
   category: string[];
@@ -51,7 +52,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
   });
 
-  // Category routes
+  // Category routes with daily updates
   const categoryRoutes: MetadataRoute.Sitemap = Object.keys(categoriesMap).map(category => ({
     url: `https://calculatorof.com/${category.toLowerCase()}`,
     lastModified: new Date(),
@@ -59,7 +60,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.9,
   }));
 
-  // Calculator routes
+  // Calculator routes with weekly updates
   const calculatorRoutes: MetadataRoute.Sitemap = calculators.flatMap((calc: Calculator) =>
     calc.category.map((category: string) => ({
       url: `https://calculatorof.com/${category.toLowerCase()}/${calc.slug}`,
